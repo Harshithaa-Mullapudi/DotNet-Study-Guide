@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C# & .NET — Week 1 Master Study Guide</title>
+<style>
+:root{
+  --bg:#f5f7fb; --panel:#ffffff; --panel2:#eef2f7; --text:#172033; --muted:#5d687a;
+  --accent:#4f46e5; --accent2:#7c3aed; --border:#dce2eb; --code:#111827; --codeText:#e5e7eb;
+  --good:#15803d; --warn:#b45309; --danger:#b91c1c; --shadow:0 10px 30px rgba(15,23,42,.07);
+}
+[data-theme="dark"]{
+  --bg:#0b1020; --panel:#12192b; --panel2:#1a2338; --text:#edf2ff; --muted:#a8b2c5;
+  --accent:#818cf8; --accent2:#a78bfa; --border:#29344d; --code:#080c16; --codeText:#e5e7eb;
+  --good:#4ade80; --warn:#fbbf24; --danger:#fb7185; --shadow:0 12px 35px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+button,input{font:inherit}
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--panel) 92%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.topbar{max-width:1500px;margin:auto;padding:14px 22px;display:flex;align-items:center;gap:16px}
+.logo{font-weight:900;font-size:18px;white-space:nowrap}
+.logo span{color:var(--accent)}
+.search{flex:1;position:relative}.search input{width:100%;padding:11px 15px 11px 40px;border:1px solid var(--border);border-radius:12px;background:var(--panel2);color:var(--text);outline:none}.search input:focus{border-color:var(--accent)}
+.search-icon{position:absolute;left:14px;top:9px;color:var(--muted)}
+.theme{border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:9px 12px;border-radius:10px;cursor:pointer}
+.layout{max-width:1500px;margin:auto;display:grid;grid-template-columns:275px 1fr;gap:22px;padding:22px}
+aside{position:sticky;top:83px;height:calc(100vh - 105px);overflow:auto;padding:15px;background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+aside h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 8px}
+nav a{display:block;text-decoration:none;color:var(--muted);padding:8px 10px;border-radius:9px;font-size:13px;margin:2px 0}
+nav a:hover,nav a.active{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-weight:700}
+main{min-width:0}
+.hero{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 18%,var(--panel)),var(--panel));border:1px solid var(--border);border-radius:20px;padding:34px;box-shadow:var(--shadow);margin-bottom:22px}
+.badge{display:inline-block;padding:5px 10px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);font-size:12px;font-weight:800}
+h1{font-size:clamp(30px,4vw,48px);line-height:1.1;margin:13px 0}
+h2{font-size:29px;margin-top:10px}h3{font-size:20px}h4{margin-bottom:5px}
+.lead{font-size:17px;color:var(--muted);max-width:900px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px}
+.card,.topic{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--shadow);margin:15px 0}
+.card h3,.card h4{margin-top:0}
+.kpi{font-size:27px;font-weight:900;color:var(--accent)}
+.tag{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;background:var(--panel2);color:var(--muted);margin:2px}
+.callout{padding:15px 17px;border-left:4px solid var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--panel));border-radius:10px;margin:14px 0}
+.good{border-left-color:var(--good)}.warn{border-left-color:var(--warn)}.danger{border-left-color:var(--danger)}
+pre{background:var(--code);color:var(--codeText);padding:17px;border-radius:12px;overflow:auto;font-size:13px;line-height:1.55;border:1px solid #20283a}
+code{font-family:"Cascadia Code","Fira Code",Consolas,monospace}
+:not(pre)>code{background:var(--panel2);padding:2px 5px;border-radius:5px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{border-bottom:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}
+th{background:var(--panel2)}
+details{background:var(--panel2);border:1px solid var(--border);border-radius:11px;margin:10px 0;padding:10px 13px}
+summary{cursor:pointer;font-weight:750}
+ul,ol{padding-left:24px}
+.question{padding:15px;background:var(--panel2);border-radius:11px;margin:10px 0}
+.answer{margin-top:9px;color:var(--good);font-weight:600}
+.progress{height:6px;background:var(--panel2);border-radius:10px;overflow:hidden;position:fixed;top:0;left:0;right:0;z-index:50}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.small{font-size:13px;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+footer{text-align:center;color:var(--muted);padding:40px}
+.hide{display:none!important}
+@media(max-width:900px){.layout{grid-template-columns:1fr;padding:12px}aside{position:static;height:auto}.two{grid-template-columns:1fr}.topbar{padding:10px 12px}.logo{display:none}}
+@media print{header,aside,.theme,.search,.progress{display:none!important}.layout{display:block}.card,.topic{box-shadow:none;break-inside:avoid}body{background:white;color:black}}
+</style>
+</head>
+<body>
+<div class="progress"><i id="progress"></i></div>
+<header>
+  <div class="topbar">
+    <div class="logo">C# <span>&</span> .NET · Week 1</div>
+    <div class="search"><span class="search-icon">⌕</span><input id="search" placeholder="Search topics, keywords, methods..." aria-label="Search"></div>
+    <button class="theme" id="themeBtn">☾ Dark</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside>
+  <h3>Week 1 Roadmap</h3>
+  <nav id="nav">
+    <a href="#overview">Overview</a>
+    <a href="#p1">1 · Introduction to .NET</a>
+    <a href="#p2">2 · .NET Ecosystem</a>
+    <a href="#p3">3 · How .NET Works</a>
+    <a href="#p4">4 · Project Structure</a>
+    <a href="#p5">5 · Namespaces & .NET Classes</a>
+    <a href="#p6">6 · C# Fundamentals</a>
+    <a href="#p7">7 · Loops & Arrays</a>
+    <a href="#p8">8 · Methods</a>
+    <a href="#p9">9 · OOP</a>
+    <a href="#p10">10 · File Handling</a>
+    <a href="#p11">11 · Exception Handling</a>
+    <a href="#p12">12 · Collections</a>
+    <a href="#p13">13 · Delegates</a>
+    <a href="#p14">14 · LINQ</a>
+    <a href="#p15">15 · Student Management System</a>
+    <a href="#p16">16 · Debugging & Revision</a>
+    <a href="#cheatsheet">⭐ Master Cheat Sheet</a>
+    <a href="#quiz">🧠 Recall Quiz</a>
+  </nav>
+</aside>
+
+<main id="content">
+<section id="overview" class="hero">
+  <span class="badge">ONE-STOP WEEK 1 GUIDE</span>
+  <h1>C# & .NET Master Study Guide</h1>
+  <p class="lead">A beginner-friendly reference covering every Week 1 topic and subtopic: from what .NET is, through C# fundamentals, OOP, files, exceptions, collections, delegates, LINQ, and the Student Management System.</p>
+  <div class="grid">
+    <div class="card"><div class="kpi">16</div><div>Major parts</div></div>
+    <div class="card"><div class="kpi">100+</div><div>Concepts & keywords</div></div>
+    <div class="card"><div class="kpi">∞</div><div>Practice opportunities</div></div>
+    <div class="card"><div class="kpi">⌕</div><div>Searchable reference</div></div>
+  </div>
+  <div class="callout good"><b>How to use:</b> Learn one part → close the page → explain it in your own words → write the small code example without looking → use the recall questions at the end.</div>
+</section>
+
+<section id="p1" class="topic">
+<h2>1. Introduction to .NET</h2>
+<p><b>.NET is a software development platform/ecosystem.</b> It provides runtimes, libraries, tools and frameworks for building, running and deploying applications.</p>
+<div class="two">
+<div class="card"><h3>.NET vs C#</h3><p><b>C#</b> is a programming language. <b>.NET</b> is the platform/ecosystem that provides the runtime, libraries, SDK and application frameworks used to build and run applications.</p></div>
+<div class="card"><h3>Simple mental model</h3><p><b>C# = language</b><br><b>.NET = platform</b><br><b>CLR = runtime</b><br><b>ASP.NET Core = web framework</b><br><b>EF Core = ORM</b></p></div>
+</div>
+<h3>Features of .NET</h3>
+<ul>
+<li><b>Cross-platform:</b> modern .NET runs on Windows, Linux and macOS.</li>
+<li><b>Open source:</b> much of the .NET platform is developed openly.</li>
+<li><b>High performance:</b> optimized runtime and libraries.</li>
+<li><b>Automatic memory management:</b> Garbage Collector manages managed memory.</li>
+<li><b>Type safety:</b> C# and the runtime help detect invalid type operations.</li>
+<li><b>Rich libraries:</b> collections, I/O, networking, JSON, threading, dates and more.</li>
+<li><b>Multiple application models:</b> web, APIs, desktop, mobile, cloud, background services and more.</li>
+</ul>
+<h3>Applications you can build</h3>
+<div class="grid">
+<div class="card"><b>Console</b><p>Command-line programs and learning projects.</p></div>
+<div class="card"><b>ASP.NET Core</b><p>Web APIs, MVC, Razor Pages, Minimal APIs, SignalR.</p></div>
+<div class="card"><b>Desktop</b><p>Windows applications such as WinForms and WPF.</p></div>
+<div class="card"><b>.NET MAUI</b><p>Cross-platform native UI applications.</p></div>
+<div class="card"><b>Blazor</b><p>Interactive web UI using .NET/C#.</p></div>
+<div class="card"><b>Cloud / Services</b><p>Microservices, workers, cloud applications and background services.</p></div>
+</div>
+</section>
+
+<section id="p2" class="topic">
+<h2>2. .NET Ecosystem</h2>
+<table><tr><th>Component</th><th>What it does</th><th>Remember</th></tr>
+<tr><td>CLR</td><td>Runtime that executes managed .NET code and provides services such as JIT and GC.</td><td>Execution environment</td></tr>
+<tr><td>ASP.NET Core</td><td>Framework for web apps and Web APIs.</td><td>Web</td></tr>
+<tr><td>EF Core</td><td>Object-relational mapper for working with databases through .NET objects.</td><td>Database/ORM</td></tr>
+<tr><td>Blazor</td><td>Framework for interactive web UI using .NET/C#.</td><td>Web UI</td></tr>
+<tr><td>.NET MAUI</td><td>Cross-platform native UI framework.</td><td>Mobile/Desktop UI</td></tr>
+<tr><td>NuGet</td><td>Package manager and package ecosystem for .NET.</td><td>Packages</td></tr>
+<tr><td>Visual Studio</td><td>IDE with editor, debugger, project tooling and .NET integration.</td><td>Development tool</td></tr>
+<tr><td>.NET SDK</td><td>Tools required to create, build, test, run and publish .NET applications.</td><td>Developer toolkit</td></tr>
+</table>
+<h3>CLR responsibilities</h3>
+<ul><li>JIT compilation</li><li>Garbage collection</li><li>Exception handling/runtime services</li><li>Type safety/runtime checks</li><li>Threading/runtime infrastructure</li></ul>
+<div class="callout"><b>Managed code:</b> code executed under the .NET runtime. <b>Unmanaged code:</b> code executing outside CLR management, such as native code.</div>
+<h3>.NET Framework vs modern .NET</h3>
+<p><b>.NET Framework</b> is the older Windows-focused implementation. <b>.NET Core</b> introduced a modern, cross-platform implementation; it evolved into the unified <b>.NET 5+</b> platform. Today, “.NET” generally refers to the modern platform.</p>
+</section>
+
+<section id="p3" class="topic">
+<h2>3. How .NET Works</h2>
+<div class="card">
+<pre><code>C# source (.cs)
+      ↓
+Roslyn C# compiler
+      ↓
+IL/CIL + metadata
+      ↓
+Assembly (.dll / .exe)
+      ↓
+CLR
+      ↓
+JIT compiler
+      ↓
+Native machine code
+      ↓
+CPU</code></pre>
+</div>
+<h3>Source code</h3><p><code>.cs</code> files contain C# source code written by the developer.</p>
+<h3>Roslyn</h3><p>The modern C# compiler. It translates C# source code into intermediate language (IL) and metadata.</p>
+<h3>IL / CIL / MSIL</h3><p>CPU-independent intermediate instructions. The runtime can compile them to native machine code for the target environment.</p>
+<h3>Assembly</h3><p>A compiled unit such as a <code>.dll</code> or <code>.exe</code>. It contains IL, metadata and possibly resources.</p>
+<h3>Metadata</h3><p>Information describing types, methods, properties, parameters, references and assembly information.</p>
+<h3>JIT</h3><p><b>Just-In-Time compiler</b> converts IL into native machine code at runtime. Modern .NET also supports technologies such as ReadyToRun and Native AOT, but JIT is the foundational model to understand.</p>
+<h3>Common commands</h3>
+<pre><code>dotnet restore   # restore dependencies
+dotnet build     # compile/build project
+dotnet run       # build if necessary, then run
+dotnet clean     # remove build outputs
+dotnet publish   # create deployment-ready output</code></pre>
+<div class="callout warn"><b>Build vs Publish:</b> Build creates build output for development/building. Publish prepares an application and its dependencies for deployment.</div>
+</section>
+
+<section id="p4" class="topic">
+<h2>4. .NET Project Structure</h2>
+<pre><code>StudentApp/
+├── StudentApp.csproj
+├── Program.cs
+├── bin/
+└── obj/</code></pre>
+<h3>Program.cs</h3><p>Contains application startup/entry-point code. Modern C# can use top-level statements instead of an explicit <code>Main</code> method.</p>
+<h3>.csproj</h3>
+<pre><code>&lt;Project Sdk="Microsoft.NET.Sdk"&gt;
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;net10.0&lt;/TargetFramework&gt;
+    &lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;
+    &lt;Nullable&gt;enable&lt;/Nullable&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;</code></pre>
+<table><tr><th>Setting</th><th>Meaning</th></tr>
+<tr><td>OutputType</td><td>Type of output, e.g. executable.</td></tr>
+<tr><td>TargetFramework</td><td>Target .NET framework version.</td></tr>
+<tr><td>ImplicitUsings</td><td>Automatically includes common namespaces.</td></tr>
+<tr><td>Nullable</td><td>Enables nullable reference type analysis.</td></tr></table>
+<p><b>Nullable enable does not mean “null is allowed”.</b> It enables compiler analysis to warn about possible null-related problems.</p>
+<h3>bin vs obj</h3>
+<ul><li><b>bin:</b> final build outputs, e.g. <code>bin/Debug/net10.0</code>.</li><li><b>obj:</b> intermediate build artifacts used during the build process.</li></ul>
+<h3>Debug vs Release</h3><p>Debug is optimized for development/debugging. Release is optimized for deployment/performance.</p>
+<h3>.sln vs .csproj</h3><p><b>.csproj</b> configures one project. <b>.sln</b> groups and manages one or more projects as a solution.</p>
+</section>
+
+<section id="p5" class="topic">
+<h2>5. Namespaces & Basic .NET Classes</h2>
+<h3>Namespaces</h3><p>A namespace organizes related types and prevents naming conflicts.</p>
+<pre><code>namespace StudentAPI.Models;
+
+public class Student { }</code></pre>
+<h3>using</h3><p><code>using</code> lets you refer to types without repeatedly writing their full namespace. It does not copy code.</p>
+<pre><code>using System;
+
+Console.WriteLine("Hello");</code></pre>
+<p>Fully qualified form: <code>System.Console.WriteLine("Hello");</code></p>
+<h3>Console</h3>
+<table><tr><th>Method</th><th>Use</th></tr><tr><td>Write</td><td>Print without a new line</td></tr><tr><td>WriteLine</td><td>Print with a new line</td></tr><tr><td>ReadLine</td><td>Read a line as string</td></tr><tr><td>ReadKey</td><td>Read a key press</td></tr><tr><td>Clear</td><td>Clear console</td></tr></table>
+<h3>Math</h3>
+<p><code>Abs</code>, <code>Max</code>, <code>Min</code>, <code>Round</code>, <code>Floor</code>, <code>Ceiling</code>, <code>Pow</code>, <code>Sqrt</code>.</p>
+<pre><code>Math.Max(10, 20);       // 20
+Math.Sqrt(25);          // 5
+Math.Round(12.56);      // 13
+Math.Floor(12.9);       // 12
+Math.Ceiling(12.1);     // 13</code></pre>
+<h3>DateTime & TimeSpan</h3>
+<pre><code>DateTime.Now
+DateTime.Today
+DateTime.Now.Year
+DateTime.Now.AddDays(7)
+DateTime.Now.AddMonths(1)
+
+TimeSpan duration = end - start;</code></pre>
+<h3>Random</h3>
+<pre><code>Random random = new();
+int number = random.Next(1, 101); // 1 inclusive, 101 exclusive</code></pre>
+<p><code>Random</code> is for general random values, not cryptographic security.</p>
+<h3>Convert</h3>
+<pre><code>Convert.ToInt32("100");
+Convert.ToDouble("12.5");
+Convert.ToDecimal("99.99");
+Convert.ToBoolean("true");
+Convert.ToString(100);</code></pre>
+<div class="callout"><b>Parse vs Convert:</b> <code>int.Parse</code> throws on invalid input; <code>TryParse</code> returns success/failure without throwing for normal invalid input. <code>Convert.ToInt32(null)</code> returns 0, while <code>int.Parse(null)</code> throws.</div>
+</section>
+
+<section id="p6" class="topic">
+<h2>6. C# Fundamentals</h2>
+<h3>6A · Program basics, variables & input</h3>
+<pre><code>Console.WriteLine("Hello World!");
+
+string name = "Harshitha";
+int age = 22;
+bool isActive = true;
+
+Console.WriteLine($"Name: {name}, Age: {age}");
+
+Console.Write("Enter age: ");
+string? input = Console.ReadLine();</code></pre>
+<p>C# is case-sensitive. Statements commonly end with <code>;</code>. Comments use <code>//</code> or <code>/* ... */</code>. String interpolation uses <code>$"..."</code>.</p>
+<h3>Constants</h3><pre><code>const double Pi = 3.14159;</code></pre><p>A <code>const</code> must be assigned at declaration and represents a compile-time constant.</p>
+
+<h3>6B · Data types</h3>
+<table><tr><th>Type</th><th>Category</th><th>Example</th></tr>
+<tr><td>int</td><td>Value</td><td><code>int age = 22;</code></td></tr>
+<tr><td>long</td><td>Value</td><td><code>long population = 9000000000;</code></td></tr>
+<tr><td>short / byte</td><td>Value</td><td>small integer ranges</td></tr>
+<tr><td>float</td><td>Value</td><td><code>float x = 1.2f;</code></td></tr>
+<tr><td>double</td><td>Value</td><td><code>double x = 1.2;</code></td></tr>
+<tr><td>decimal</td><td>Value</td><td><code>decimal price = 99.99m;</code></td></tr>
+<tr><td>char</td><td>Value</td><td><code>'A'</code></td></tr>
+<tr><td>bool</td><td>Value</td><td><code>true</code></td></tr>
+<tr><td>string</td><td>Reference</td><td><code>"Hello"</code></td></tr>
+<tr><td>object</td><td>Reference</td><td>can reference any object/value via boxing where applicable</td></tr></table>
+<p><b>Value types:</b> numerics, bool, char, structs, enums. <b>Reference types:</b> classes, strings, arrays, delegates, interfaces and object.</p>
+<div class="callout warn"><b>Don't memorize “value types live on stack and reference types on heap” as an absolute rule.</b> Storage depends on context. Value-type fields can be inside heap objects, for example.</div>
+<h3>var</h3><p><code>var</code> uses compile-time type inference. It is <b>not</b> the same as dynamic typing.</p>
+<pre><code>var age = 22;       // compiler knows this is int
+var name = "A";     // compiler knows this is string</code></pre>
+<h3>Nullable types</h3>
+<pre><code>int? age = null;
+
+if (age.HasValue)
+{
+    Console.WriteLine(age.Value);
+}
+
+int result = age ?? 0;</code></pre>
+<p><code>??</code> supplies a fallback when the left side is null.</p>
+
+<h3>6C · Casting & conversion</h3>
+<pre><code>double price = 99.99;
+int value = (int)price;       // 99
+
+double x = 5.0 / 2;           // 2.5
+int y = 5 / 2;                // 2
+
+int number = int.Parse("100");
+
+if (int.TryParse("123", out int result))
+{
+    Console.WriteLine(result);
+}</code></pre>
+<p><b>Implicit:</b> safe compatible conversion handled automatically. <b>Explicit:</b> you specify the cast. <b>TryParse:</b> preferred for user input validation.</p>
+<h4>Boxing & unboxing</h4>
+<pre><code>int number = 10;
+object boxed = number;   // boxing
+
+int value = (int)boxed;  // unboxing</code></pre>
+<p>Boxing wraps a value type as an object; unboxing extracts the contained value type and requires the correct type.</p>
+<div class="callout"><b>Important:</b> <code>(int)99.99</code> produces 99. <code>Convert.ToInt32(99.99)</code> rounds according to Convert's rules and produces 100 in this example.</div>
+
+<h3>6D · Strings</h3>
+<p>Strings are reference types and are <b>immutable</b>: operations produce a new string rather than changing the existing string object.</p>
+<pre><code>string name = "Harshitha";
+
+name.Length;
+name.ToUpper();
+name.ToLower();
+name.Trim();
+name.Contains("shi");
+name.StartsWith("Har");
+name.EndsWith("tha");
+name.IndexOf("sh");
+name.Substring(0, 4);
+name.Replace("Harshitha", "H");
+name.Remove(0, 2);
+name.Insert(0, "Hi ");
+name.Equals("Harshitha");
+
+string[] parts = "A,B,C".Split(',');
+string joined = string.Join("-", parts);</code></pre>
+<p><code>IndexOf</code> returns <code>-1</code> when the substring isn't found. String <code>==</code> compares string contents.</p>
+<h4>Null, empty and whitespace</h4>
+<pre><code>string? a = null;
+string b = "";
+string c = "   ";
+
+string.IsNullOrEmpty(b);
+string.IsNullOrWhiteSpace(c);</code></pre>
+<h4>Escapes & verbatim strings</h4>
+<pre><code>string path = "C:\\Users\\Test\\file.txt";
+string path2 = @"C:\Users\Test\file.txt";
+string quote = "He said \"Hello\"";</code></pre>
+
+<h3>6E · Operators</h3>
+<table><tr><th>Category</th><th>Operators</th></tr>
+<tr><td>Arithmetic</td><td><code>+ - * / %</code></td></tr>
+<tr><td>Unary</td><td><code>++ -- + - !</code></td></tr>
+<tr><td>Assignment</td><td><code>= += -= *= /= %=</code></td></tr>
+<tr><td>Comparison</td><td><code>== != &gt; &lt; &gt;= &lt;=</code></td></tr>
+<tr><td>Logical</td><td><code>&& || !</code></td></tr>
+<tr><td>Ternary</td><td><code>condition ? a : b</code></td></tr>
+<tr><td>Null coalescing</td><td><code>??</code></td></tr>
+<tr><td>Null conditional</td><td><code>?.</code></td></tr>
+<tr><td>Null-coalescing assignment</td><td><code>??=</code></td></tr></table>
+<pre><code>string? name = null;
+Console.WriteLine(name ?? "Unknown");
+
+int? length = name?.Length;
+
+name ??= "Harshitha";</code></pre>
+<p>Always consider operator precedence when multiple operators appear in one expression. Use parentheses when clarity matters.</p>
+
+<h3>6F · if / else / switch</h3>
+<pre><code>if (age >= 18)
+{
+    Console.WriteLine("Adult");
+}
+else
+{
+    Console.WriteLine("Minor");
+}
+
+switch (grade)
+{
+    case "A":
+        Console.WriteLine("Excellent");
+        break;
+    case "B":
+        Console.WriteLine("Good");
+        break;
+    default:
+        Console.WriteLine("Other");
+        break;
+}</code></pre>
+<h4>Switch expression</h4>
+<pre><code>string result = grade switch
+{
+    "A" => "Excellent",
+    "B" => "Good",
+    _ => "Other"
+};</code></pre>
+<h3>6G · Flow-control keywords</h3>
+<table><tr><th>Keyword</th><th>Meaning</th></tr>
+<tr><td>break</td><td>Exit current loop or switch</td></tr>
+<tr><td>continue</td><td>Skip remaining current loop iteration</td></tr>
+<tr><td>return</td><td>Exit method, optionally returning a value</td></tr>
+<tr><td>goto</td><td>Jump to a labeled statement; uncommon in normal application code</td></tr></table>
+</section>
+
+<section id="p7" class="topic">
+<h2>7. Loops, Arrays & Memory</h2>
+<h3>for</h3>
+<pre><code>for (int i = 0; i < 5; i++)
+{
+    Console.WriteLine(i);
+}</code></pre>
+<h3>while</h3>
+<pre><code>while (condition)
+{
+    // repeat while condition is true
+}</code></pre>
+<h3>do-while</h3>
+<pre><code>do
+{
+    // executes at least once
+}
+while (condition);</code></pre>
+<h3>foreach</h3>
+<pre><code>foreach (Student student in students)
+{
+    Console.WriteLine(student.Name);
+}</code></pre>
+<p>Nested loops are loops inside loops. A reverse loop can decrement the index. You can control step size with <code>i += 2</code>, etc.</p>
+<h3>Arrays</h3>
+<p>An array is a fixed-size, zero-based collection of elements of one type.</p>
+<pre><code>int[] numbers = { 10, 20, 30 };
+
+Console.WriteLine(numbers[0]);
+Console.WriteLine(numbers.Length);</code></pre>
+<h4>Multidimensional arrays</h4>
+<pre><code>int[,] matrix =
+{
+    { 1, 2 },
+    { 3, 4 }
+};
+
+matrix.GetLength(0); // rows
+matrix.GetLength(1); // columns</code></pre>
+<h4>Jagged arrays</h4>
+<pre><code>int[][] values =
+{
+    new[] { 1, 2 },
+    new[] { 3, 4, 5 }
+};</code></pre>
+<h3>Memory mental model</h3>
+<ul><li>Variables hold values or references.</li><li>Reference variables can point to objects managed by the .NET runtime.</li><li>The Garbage Collector automatically reclaims managed objects that are no longer reachable.</li><li>Arrays and class objects are reference types.</li><li>Copying a reference normally copies the reference, not the entire object.</li></ul>
+<h4>Shallow vs deep copy</h4><p><b>Shallow copy:</b> top-level object is copied but referenced nested objects may still be shared. <b>Deep copy:</b> nested object graph is copied so the new object does not share those mutable nested references.</p>
+</section>
+
+<section id="p8" class="topic">
+<h2>8. Methods</h2>
+<h3>Basic method structure</h3>
+<pre><code>static int Add(int a, int b)
+{
+    return a + b;
+}
+
+int result = Add(10, 20);</code></pre>
+<p><b>Parameters</b> are variables in the method declaration. <b>Arguments</b> are the actual values supplied during invocation.</p>
+<h3>void</h3><pre><code>static void Display()
+{
+    Console.WriteLine("Hello");
+}</code></pre>
+<p>A <code>void</code> method does not return a value.</p>
+<h3>Method overloading</h3>
+<pre><code>static int Add(int a, int b) => a + b;
+static int Add(int a, int b, int c) => a + b + c;
+static double Add(double a, double b) => a + b;</code></pre>
+<p>Overloads differ by parameter number, type, or order. <b>Return type alone cannot overload a method.</b></p>
+<h3>Pass by value</h3>
+<p>C# passes arguments by value by default. For a reference-type argument, the reference itself is copied by value, so both variables can refer to the same object.</p>
+<h3>ref</h3>
+<pre><code>static void Increase(ref int value)
+{
+    value++;
+}
+
+int x = 10;
+Increase(ref x); // x becomes 11</code></pre>
+<p>The caller must initialize the variable before passing it with <code>ref</code>.</p>
+<h3>out</h3>
+<pre><code>static void GetValues(out int x)
+{
+    x = 100;
+}
+
+GetValues(out int value);</code></pre>
+<p>The caller doesn't need to initialize the variable first. The called method must assign it before returning.</p>
+<h3>in</h3><p><code>in</code> passes a variable by readonly reference. The called method can read it but should not modify it through that parameter.</p>
+<h3>params</h3>
+<pre><code>static int Add(params int[] numbers)
+{
+    int total = 0;
+    foreach (int n in numbers) total += n;
+    return total;
+}
+
+Add(1, 2, 3, 4);</code></pre>
+<p><code>params</code> allows a variable number of arguments and is represented as an array inside the method.</p>
+</section>
+
+<section id="p9" class="topic">
+<h2>9. Object-Oriented Programming (OOP)</h2>
+<h3>Class & object</h3>
+<p>A <b>class</b> is a blueprint/type. An <b>object</b> is an instance created from that class.</p>
+<pre><code>class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public void Display()
+    {
+        Console.WriteLine(Name);
+    }
+}
+
+Student student = new Student();</code></pre>
+<h3>Members</h3>
+<ul><li><b>Field:</b> variable declared in a type.</li><li><b>Property:</b> controlled access to data, usually with get/set accessors.</li><li><b>Method:</b> behavior/action.</li><li><b>Constructor:</b> initializes an object when it is created.</li></ul>
+<h3>Constructor</h3>
+<pre><code>public Student(int id, string name)
+{
+    Id = id;
+    Name = name;
+}</code></pre>
+<p>A constructor has the same name as the class and no return type. Constructors can be overloaded.</p>
+<h3>Access modifiers</h3>
+<table><tr><th>Modifier</th><th>Meaning</th></tr>
+<tr><td>public</td><td>Accessible wherever permitted</td></tr>
+<tr><td>private</td><td>Containing type only</td></tr>
+<tr><td>protected</td><td>Containing type and derived types</td></tr>
+<tr><td>internal</td><td>Same assembly</td></tr>
+<tr><td>protected internal</td><td>Same assembly OR derived type</td></tr>
+<tr><td>private protected</td><td>Same assembly AND derived type</td></tr></table>
+<h3>Encapsulation</h3><p>Bundling data and behavior together and controlling how internal state is accessed or changed.</p>
+<h3>readonly vs const</h3>
+<table><tr><th>Feature</th><th>readonly</th><th>const</th></tr>
+<tr><td>Assignment</td><td>Declaration or instance constructor</td><td>Declaration only</td></tr>
+<tr><td>Runtime value</td><td>Can be determined at construction time</td><td>Compile-time constant</td></tr>
+<tr><td>Implicitly static</td><td>No</td><td>Yes</td></tr></table>
+<pre><code>readonly int id;
+
+public Student(int id)
+{
+    this.id = id;
+}
+
+const double Pi = 3.14159;</code></pre>
+<h3>Inheritance</h3>
+<pre><code>class Animal
+{
+    public void Eat() { }
+}
+
+class Dog : Animal
+{
+}</code></pre>
+<p>C# classes support single class inheritance. A class can implement multiple interfaces. Common forms: single, multilevel and hierarchical inheritance.</p>
+<h3>Polymorphism</h3>
+<p><b>Compile-time:</b> method overloading. <b>Runtime:</b> overriding through virtual/override.</p>
+<pre><code>class Animal
+{
+    public virtual void Speak() => Console.WriteLine("Animal");
+}
+
+class Dog : Animal
+{
+    public override void Speak() => Console.WriteLine("Bark");
+}</code></pre>
+<p><code>virtual</code> allows a derived class to override a member. <code>override</code> provides the derived implementation.</p>
+<h3>Abstraction</h3>
+<p>Expose what an object does while hiding unnecessary implementation details.</p>
+<pre><code>abstract class Shape
+{
+    public abstract double Area();
+}</code></pre>
+<p>An abstract class cannot be instantiated directly. Abstract members have no implementation in the abstract class and must be implemented by a concrete derived class.</p>
+<h3>Interfaces</h3>
+<pre><code>interface IPrintable
+{
+    void Print();
+}
+
+class Student : IPrintable
+{
+    public void Print()
+    {
+        Console.WriteLine("Student");
+    }
+}</code></pre>
+<p>An interface defines a contract/capability. A class can implement multiple interfaces.</p>
+<h3>Abstract class vs interface</h3>
+<table><tr><th>Abstract class</th><th>Interface</th></tr><tr><td>Can contain state, implemented members and abstract members</td><td>Defines a contract; can also contain modern interface members, but conceptually focuses on capabilities/contracts</td></tr><tr><td>A class can inherit one base class</td><td>A class can implement multiple interfaces</td></tr></table>
+<h3>Enum</h3>
+<pre><code>enum Status
+{
+    Active,   // 0
+    Inactive  // 1
+}
+
+Status current = Status.Active;</code></pre>
+<p>Enums provide named constants. You can assign explicit underlying values.</p>
+</section>
+
+<section id="p10" class="topic">
+<h2>10. File Handling</h2>
+<p>Most basic file APIs are in <code>System.IO</code>. The static <code>File</code> class provides convenient operations.</p>
+<table><tr><th>Operation</th><th>Method</th></tr>
+<tr><td>Create/overwrite text</td><td><code>File.WriteAllText</code></td></tr>
+<tr><td>Read all text</td><td><code>File.ReadAllText</code></td></tr>
+<tr><td>Read lines</td><td><code>File.ReadAllLines</code></td></tr>
+<tr><td>Read bytes</td><td><code>File.ReadAllBytes</code></td></tr>
+<tr><td>Write lines</td><td><code>File.WriteAllLines</code></td></tr>
+<tr><td>Write bytes</td><td><code>File.WriteAllBytes</code></td></tr>
+<tr><td>Append text</td><td><code>File.AppendAllText</code></td></tr>
+<tr><td>Append lines</td><td><code>File.AppendAllLines</code></td></tr>
+<tr><td>Check exists</td><td><code>File.Exists</code></td></tr>
+<tr><td>Copy</td><td><code>File.Copy</code></td></tr>
+<tr><td>Move</td><td><code>File.Move</code></td></tr>
+<tr><td>Delete</td><td><code>File.Delete</code></td></tr></table>
+<pre><code>string path = "students.txt";
+
+File.WriteAllText(path, "Harshitha,22,A");
+
+string content = File.ReadAllText(path);
+
+File.AppendAllText(path, "\nRahul,20,B");
+
+if (File.Exists(path))
+{
+    Console.WriteLine("File exists");
+}</code></pre>
+<h3>Paths</h3>
+<p><b>Relative path:</b> interpreted relative to the application's current working directory. <b>Absolute path:</b> full path from a root/drive.</p>
+<pre><code>string path = @"C:\Users\Test\students.txt";</code></pre>
+<p>Verbatim strings <code>@"..."</code> make Windows backslashes easier to write.</p>
+<h3>Read methods</h3><ul><li><code>ReadAllText</code> → one string</li><li><code>ReadAllLines</code> → string array</li><li><code>ReadAllBytes</code> → byte array</li></ul>
+<div class="callout"><b>Remember:</b> WriteAllText overwrites existing content. AppendAllText adds to the existing content.</div>
+</section>
+
+<section id="p11" class="topic">
+<h2>11. Exception Handling</h2>
+<p>An <b>exception</b> is an object representing an error/unexpected condition that occurs during execution.</p>
+<h3>Compile-time error vs runtime exception</h3>
+<p>A compile-time error prevents successful compilation. A runtime exception occurs while a compiled program is executing.</p>
+<h3>Hierarchy</h3>
+<pre><code>System.Exception
+├── System.SystemException
+│   ├── FormatException
+│   ├── DivideByZeroException
+│   ├── NullReferenceException
+│   ├── IndexOutOfRangeException
+│   ├── InvalidOperationException
+│   └── ...
+└── IOException
+    └── FileNotFoundException
+        ...</code></pre>
+<h3>try / catch / finally</h3>
+<pre><code>try
+{
+    int age = int.Parse(input);
+}
+catch (FormatException ex)
+{
+    Console.WriteLine("Invalid number format.");
+}
+finally
+{
+    Console.WriteLine("Cleanup/finalization work.");
+}</code></pre>
+<ul><li><b>try:</b> code that may throw.</li><li><b>catch:</b> handles matching exceptions.</li><li><b>finally:</b> cleanup code that normally runs whether an exception occurred or not.</li></ul>
+<h3>Multiple catch blocks</h3><p>Put more specific exception types before broader types such as <code>Exception</code>.</p>
+<h3>Exception object</h3>
+<pre><code>catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+    Console.WriteLine(ex.GetType());
+    Console.WriteLine(ex.StackTrace);
+    Console.WriteLine(ex.InnerException);
+}</code></pre>
+<h3>throw</h3>
+<pre><code>if (age < 0)
+{
+    throw new ArgumentException("Age cannot be negative.");
+}</code></pre>
+<p><code>throw;</code> rethrows the current exception while preserving the original stack trace. <code>throw ex;</code> can reset the stack-trace origin and is generally avoided when rethrowing.</p>
+<h3>Exception filters</h3>
+<pre><code>catch (Exception ex) when (ex.Message.Contains("Student"))
+{
+    // handle only matching exceptions
+}</code></pre>
+<h3>Custom exceptions</h3>
+<pre><code>class StudentNotFoundException : Exception
+{
+    public StudentNotFoundException(string message)
+        : base(message) { }
+}</code></pre>
+<h3>TryParse vs exceptions</h3>
+<p>Expected invalid user input should normally be validated with <code>TryParse</code> rather than using exceptions as normal control flow.</p>
+</section>
+
+<section id="p12" class="topic">
+<h2>12. Collections</h2>
+<p>Collections store and manage multiple values/objects.</p>
+<h3>Array vs collection</h3>
+<p>An array has fixed size. Many collection types are designed to grow/shrink dynamically.</p>
+<h3>Generic vs non-generic</h3>
+<p><b>Generic:</b> type-safe, e.g. <code>List&lt;Student&gt;</code>. <b>Non-generic:</b> older object-based collections such as <code>ArrayList</code> and <code>Hashtable</code>. Generic collections are preferred for normal modern code.</p>
+<h3>Common namespaces</h3><p><code>System.Collections</code> contains older non-generic collections. <code>System.Collections.Generic</code> contains generic collections.</p>
+<h3>List&lt;T&gt;</h3>
+<pre><code>List<string> names = new();
+
+names.Add("A");
+names.Add("B");
+names.Remove("A");
+names.RemoveAt(0);
+
+int count = names.Count;
+int capacity = names.Capacity;</code></pre>
+<p><b>Count</b> = number of actual elements. <b>Capacity</b> = current internal storage available before another resize may be needed. Capacity is not a permanent maximum.</p>
+<h3>Dictionary&lt;TKey,TValue&gt;</h3>
+<pre><code>Dictionary<int, string> students = new();
+
+students[1] = "Harshitha";
+students[2] = "Rahul";
+
+if (students.TryGetValue(1, out string? name))
+{
+    Console.WriteLine(name);
+}</code></pre>
+<p>Keys are unique; values can repeat. <code>TryGetValue</code> safely checks for a key and outputs its value when found.</p>
+<h3>Queue&lt;T&gt; — FIFO</h3>
+<pre><code>Queue<string> queue = new();
+queue.Enqueue("A");
+queue.Enqueue("B");
+
+queue.Dequeue(); // A</code></pre>
+<h3>Stack&lt;T&gt; — LIFO</h3>
+<pre><code>Stack<string> stack = new();
+stack.Push("A");
+stack.Push("B");
+
+stack.Pop(); // B</code></pre>
+<h3>HashSet&lt;T&gt;</h3><p>Stores unique values; useful when uniqueness is important.</p>
+<h3>SortedSet&lt;T&gt;</h3><p>Unique values maintained in sorted order.</p>
+<h3>LinkedList&lt;T&gt;</h3><p>Linked nodes. Useful when you specifically need linked-list semantics and efficient insertion/removal around known nodes; it is not automatically faster than <code>List&lt;T&gt;</code>.</p>
+<h3>SortedDictionary / SortedList</h3><p>Both maintain key-value data sorted by key, with different internal data structures and performance characteristics.</p>
+<h3>Older non-generic collections</h3><p><code>ArrayList</code>, <code>Hashtable</code>, non-generic <code>Queue</code>, and non-generic <code>Stack</code> are older alternatives. They usually require more casting and can cause boxing for value types.</p>
+<h3>IEnumerable & IEnumerator</h3>
+<table><tr><th>Interface</th><th>Meaning</th></tr>
+<tr><td>IEnumerable&lt;T&gt;</td><td>Provides a way to obtain an enumerator and enumerate a sequence.</td></tr>
+<tr><td>IEnumerator&lt;T&gt;</td><td>The cursor/enumerator that moves through the sequence using <code>MoveNext()</code> and exposes <code>Current</code>.</td></tr>
+<tr><td>ICollection&lt;T&gt;</td><td>General collection operations and Count.</td></tr>
+<tr><td>IList&lt;T&gt;</td><td>List-like/indexed contract.</td></tr>
+<tr><td>IDictionary&lt;TKey,TValue&gt;</td><td>Key-value collection contract.</td></tr></table>
+<p><code>foreach</code> conceptually obtains an enumerator, repeatedly calls <code>MoveNext()</code>, and reads <code>Current</code>.</p>
+<h3>Choosing a collection</h3>
+<table><tr><th>Need</th><th>Use</th></tr>
+<tr><td>General dynamic list</td><td>List&lt;T&gt;</td></tr>
+<tr><td>Key → value lookup</td><td>Dictionary&lt;TKey,TValue&gt;</td></tr>
+<tr><td>FIFO</td><td>Queue&lt;T&gt;</td></tr>
+<tr><td>LIFO</td><td>Stack&lt;T&gt;</td></tr>
+<tr><td>Unique values</td><td>HashSet&lt;T&gt;</td></tr>
+<tr><td>Unique + sorted</td><td>SortedSet&lt;T&gt;</td></tr>
+<tr><td>Linked-list behavior</td><td>LinkedList&lt;T&gt;</td></tr>
+<tr><td>Sorted key-value data</td><td>SortedDictionary / SortedList</td></tr></table>
+</section>
+
+<section id="p13" class="topic">
+<h2>13. Delegates</h2>
+<p>A <b>delegate is a type that can hold a reference to one or more compatible methods.</b> It allows methods to be treated like values: stored, passed, returned and invoked.</p>
+<h3>Why delegates?</h3>
+<p>They allow us to pass behavior/methods around. This enables callbacks, custom sorting, events and LINQ operations.</p>
+<h3>Declaration → assignment → invocation</h3>
+<pre><code>delegate void MyDelegate();
+
+static void SayHello()
+{
+    Console.WriteLine("Hello");
+}
+
+MyDelegate del = SayHello;
+del();</code></pre>
+<p><code>SayHello</code> is a method group/reference that can be converted to a compatible delegate. <code>SayHello()</code> actually invokes the method immediately.</p>
+<h3>Method compatibility</h3><p>The method must have a compatible return type and parameter list with the delegate. If it is incompatible, you normally get a compile-time error rather than a runtime exception.</p>
+<h3>Passing delegates</h3>
+<pre><code>static void Execute(Action action)
+{
+    action();
+}
+
+Execute(SayHello);</code></pre>
+<p>The method is passed to <code>Execute</code>, and <code>Execute</code> decides when to invoke it.</p>
+<h3>Returning delegates</h3>
+<pre><code>static Action GetAction()
+{
+    return SayHello;
+}</code></pre>
+<h3>Multicast delegates</h3>
+<pre><code>Action action = Hello;
+action += Goodbye;
+action -= Hello;
+
+action();</code></pre>
+<p><code>+=</code> adds a method to the invocation list. <code>-=</code> removes a method.</p>
+<h3>Built-in delegates</h3>
+<table><tr><th>Type</th><th>Purpose</th><th>Example</th></tr>
+<tr><td>Action</td><td>Returns void, no parameters</td><td><code>Action a = Hello;</code></td></tr>
+<tr><td>Action&lt;T&gt;</td><td>Returns void, accepts parameters</td><td><code>Action&lt;int&gt;</code></td></tr>
+<tr><td>Func&lt;...&gt;</td><td>Returns a value; last generic type is return type</td><td><code>Func&lt;int,int&gt;</code></td></tr>
+<tr><td>Predicate&lt;T&gt;</td><td>Accepts T and returns bool</td><td><code>Predicate&lt;int&gt;</code></td></tr></table>
+<pre><code>Action<string> greet = Greet;
+Func<int, int> square = Square;
+Predicate<int> isEven = n => n % 2 == 0;</code></pre>
+<h3>Callbacks</h3><p>A callback is when a method is passed to another method and called later.</p>
+<h3>Delegates + sorting</h3>
+<pre><code>numbers.Sort((a, b) => a.CompareTo(b));</code></pre>
+<h3>Delegates + RemoveAll</h3>
+<pre><code>numbers.RemoveAll(n => n % 2 != 0);</code></pre>
+<h3>Delegates + events</h3><p>Events use delegates to notify subscribed methods.</p>
+<h3>Delegates + LINQ</h3><p>LINQ methods commonly accept delegate-based behavior, often supplied through lambda expressions.</p>
+</section>
+
+<section id="p14" class="topic">
+<h2>14. LINQ</h2>
+<p><b>LINQ = Language Integrated Query.</b> It provides a consistent way to query, filter, sort, transform, group and aggregate data.</p>
+<h3>Lambda expression</h3>
+<pre><code>x => x * 2
+x => x > 10
+s => s.Age >= 18</code></pre>
+<p>Read <code>s =&gt; s.Age &gt;= 18</code> as “take a student <code>s</code> and check whether their age is at least 18.”</p>
+<h3>Filtering — Where</h3>
+<pre><code>var adults = students.Where(s => s.Age >= 18);
+var gradeA = students.Where(s => s.Grade == "A");</code></pre>
+<h3>Projection — Select</h3>
+<pre><code>var names = students.Select(s => s.Name);</code></pre>
+<div class="callout"><b>Where = Which items?</b> &nbsp; <b>Select = What from each item?</b></div>
+<h3>Sorting</h3>
+<pre><code>students.OrderBy(s => s.Age);
+students.OrderByDescending(s => s.Age);
+students.OrderBy(s => s.Grade).ThenBy(s => s.Name);</code></pre>
+<h3>Finding</h3>
+<table><tr><th>Method</th><th>Behavior</th></tr>
+<tr><td>First</td><td>First match; throws if none</td></tr>
+<tr><td>FirstOrDefault</td><td>First match or default</td></tr>
+<tr><td>Single</td><td>Exactly one match expected; throws for zero or multiple</td></tr>
+<tr><td>SingleOrDefault</td><td>Zero or one allowed; throws for multiple</td></tr>
+</table>
+<h3>Any / All</h3>
+<pre><code>students.Any(s => s.Age > 20);
+students.All(s => s.Age >= 18);</code></pre>
+<p><code>Any</code> asks whether at least one matches. <code>All</code> asks whether every element matches.</p>
+<h3>Aggregation</h3>
+<pre><code>students.Count();
+students.Sum(s => s.Age);
+students.Average(s => s.Age);
+students.Min(s => s.Age);
+students.Max(s => s.Age);</code></pre>
+<h3>Distinct / Contains</h3>
+<pre><code>var grades = students.Select(s => s.Grade).Distinct();
+bool exists = numbers.Contains(5);</code></pre>
+<h3>Skip / Take</h3>
+<pre><code>var page = students
+    .Skip(10)
+    .Take(10);</code></pre>
+<p>Pagination formula: <code>Skip((pageNumber - 1) * pageSize).Take(pageSize)</code>.</p>
+<h3>GroupBy</h3>
+<pre><code>var groups = students.GroupBy(s => s.Grade);</code></pre>
+<p>This creates groups based on a key such as Grade.</p>
+<h3>ToList / ToArray</h3>
+<pre><code>var result = students
+    .Where(s => s.Age >= 18)
+    .ToList();</code></pre>
+<p>These materialize the sequence into a concrete collection.</p>
+<h3>Method syntax vs query syntax</h3>
+<pre><code>// Method syntax
+var result = students
+    .Where(s => s.Age >= 18)
+    .OrderBy(s => s.Name);
+
+// Query syntax
+var result =
+    from s in students
+    where s.Age >= 18
+    orderby s.Name
+    select s;</code></pre>
+<h3>Deferred execution</h3>
+<p>Many LINQ queries are evaluated when the sequence is enumerated rather than when the query expression is created.</p>
+<pre><code>var result = students.Where(s => s.Age >= 18);
+
+// execution occurs when enumerated:
+foreach (var s in result) { }
+
+// or materialized:
+var list = result.ToList();</code></pre>
+<h3>LINQ + IEnumerable</h3><p>LINQ commonly operates over <code>IEnumerable&lt;T&gt;</code> for in-memory sequences. This connects directly to the collection topic.</p>
+<h3>StudentAPI examples</h3>
+<pre><code>public List&lt;Student&gt; GetAdultStudents()
+{
+    return students
+        .Where(s => s.Age >= 18)
+        .ToList();
+}
+
+public Student? GetStudentById(int id)
+{
+    return students.FirstOrDefault(s => s.Id == id);
+}
+
+public List&lt;string&gt; GetStudentNames()
+{
+    return students.Select(s => s.Name).ToList();
+}</code></pre>
+</section>
+
+<section id="p15" class="topic">
+<h2>15. Practical Student Management System</h2>
+<p>This combines the Week 1 fundamentals into one console application.</p>
+<h3>Suggested model</h3>
+<pre><code>class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public string Grade { get; set; }
+
+    public Student(int id, string name, int age, string grade)
+    {
+        Id = id;
+        Name = name;
+        Age = age;
+        Grade = grade;
+    }
+
+    public void DisplayDetails()
+    {
+        Console.WriteLine(
+            $"Id: {Id}, Name: {Name}, Age: {Age}, Grade: {Grade}");
+    }
+}</code></pre>
+<h3>Management service using List + LINQ</h3>
+<pre><code>class StudentService
+{
+    private readonly List&lt;Student&gt; students = new();
+
+    public void AddStudent(Student student)
+    {
+        students.Add(student);
+    }
+
+    public List&lt;Student&gt; GetStudents()
+    {
+        return students;
+    }
+
+    public Student? GetStudentById(int id)
+    {
+        return students.FirstOrDefault(s => s.Id == id);
+    }
+
+    public List&lt;Student&gt; GetStudentsByGrade(string grade)
+    {
+        return students
+            .Where(s => s.Grade == grade)
+            .ToList();
+    }
+
+    public bool RemoveStudent(int id)
+    {
+        Student? student = GetStudentById(id);
+
+        if (student == null)
+            return false;
+
+        students.Remove(student);
+        return true;
+    }
+}</code></pre>
+<h3>Concepts combined</h3>
+<div class="grid">
+<div class="card"><b>OOP</b><p>Student and StudentService classes.</p></div>
+<div class="card"><b>Collections</b><p>List&lt;Student&gt; stores students.</p></div>
+<div class="card"><b>Methods</b><p>Add, Get, Remove and search methods.</p></div>
+<div class="card"><b>LINQ</b><p>Where, FirstOrDefault, Select, OrderBy.</p></div>
+<div class="card"><b>Exceptions</b><p>Validate invalid input and handle failures.</p></div>
+<div class="card"><b>File I/O</b><p>Persist student information to a file.</p></div>
+</div>
+<h3>Recommended menu</h3>
+<pre><code>1. Add student
+2. Display students
+3. Search student
+4. Filter by grade
+5. Sort by age
+6. Remove student
+7. Save to file
+8. Load from file
+9. Exit</code></pre>
+</section>
+
+<section id="p16" class="topic">
+<h2>16. Debugging & Revision</h2>
+<h3>Debugging basics</h3>
+<ul><li>Set a breakpoint on a line where you want execution to pause.</li><li>Step Over executes the current line without entering called methods.</li><li>Step Into enters a called method.</li><li>Step Out finishes the current method and returns to its caller.</li><li>Inspect variables using Locals, Watch and hover/debug windows.</li><li>Use the Call Stack to understand how execution reached the current method.</li></ul>
+<h3>Debugging questions to ask</h3>
+<ol><li>What value did I expect?</li><li>What value did I actually get?</li><li>Where did it first become wrong?</li><li>Which method changed it?</li><li>Is the issue input, condition, loop, collection, null, exception or state?</li></ol>
+<h3>Common beginner mistakes</h3>
+<table><tr><th>Mistake</th><th>Correct idea</th></tr>
+<tr><td>“C# and .NET are the same”</td><td>C# is a language; .NET is the platform.</td></tr>
+<tr><td>“var means dynamic”</td><td>var uses compile-time type inference.</td></tr>
+<tr><td>“All value types are on stack”</td><td>Storage depends on context.</td></tr>
+<tr><td>“Array = ArrayList”</td><td>Array is fixed-size; ArrayList is an older non-generic collection.</td></tr>
+<tr><td>“Count is capacity”</td><td>Count = elements; Capacity = allocated internal list storage.</td></tr>
+<tr><td>“out must be initialized”</td><td>out does not require caller initialization; method must assign it.</td></tr>
+<tr><td>“ref is same as out”</td><td>ref requires caller initialization; out does not.</td></tr>
+<tr><td>“throw ex preserves stack exactly”</td><td>Use bare throw to rethrow and preserve original stack trace.</td></tr>
+<tr><td>“FirstOrDefault always returns null”</td><td>It returns default(T); for reference types this is usually null.</td></tr>
+<tr><td>“Select filters”</td><td>Select transforms/projects; Where filters.</td></tr>
+<tr><td>“Func always has parameters”</td><td>Func can have zero or more inputs; last generic parameter is return type.</td></tr>
+</table>
+</section>
+
+<section id="cheatsheet" class="topic">
+<h2>⭐ Week 1 Master Cheat Sheet</h2>
+<h3>.NET</h3>
+<div class="callout"><b>.NET = platform · C# = language · CLR = runtime · SDK = development tools · NuGet = packages · ASP.NET Core = web · EF Core = ORM · Blazor = web UI · MAUI = cross-platform native UI</b></div>
+<h3>Execution</h3><pre><code>C# → Roslyn → IL + metadata → Assembly → CLR → JIT → Machine code</code></pre>
+<h3>Project files</h3><pre><code>.cs       → C# source
+.csproj   → project configuration
+.sln      → solution/group of projects
+bin       → final build outputs
+obj       → intermediate build files</code></pre>
+<h3>C# flow control</h3><pre><code>if / switch → decide
+for / while / foreach → repeat
+break → stop
+continue → skip iteration
+return → exit method</code></pre>
+<h3>Methods</h3><pre><code>ref    → caller initializes; method can modify
+out    → caller needn't initialize; method must assign
+in     → readonly reference
+params → variable number of arguments</code></pre>
+<h3>OOP</h3><pre><code>Encapsulation → protect/control internal state
+Inheritance   → derive from existing type
+Polymorphism  → same interface, different behavior
+Abstraction   → expose what, hide how</code></pre>
+<h3>Collections</h3><pre><code>List       → dynamic list
+Dictionary → key/value
+Queue      → FIFO
+Stack      → LIFO
+HashSet    → unique
+SortedSet  → unique + sorted
+LinkedList → linked nodes</code></pre>
+<h3>Delegates</h3><pre><code>Action     → void
+Func       → returns value; LAST type = return type
+Predicate  → returns bool
++=         → add method
+-=         → remove method</code></pre>
+<h3>LINQ</h3><pre><code>Where      → filter
+Select     → transform
+OrderBy    → ascending sort
+ThenBy     → secondary sort
+First      → first; throws if none
+FirstOrDefault → first/default
+Single     → exactly one
+Any        → at least one?
+All        → every item?
+Count      → count
+Sum        → total
+Average    → average
+Min/Max    → extremes
+Distinct   → remove duplicates
+Skip/Take  → partition
+GroupBy    → group
+ToList     → materialize as List</code></pre>
+</section>
+
+<section id="quiz" class="topic">
+<h2>🧠 Week 1 Recall Quiz</h2>
+<p class="small">Try answering before opening each answer. The goal is recall, not recognition.</p>
+
+<details><summary>1. What is .NET? What is C#?</summary><div class="answer">.NET is a development platform/ecosystem; C# is a programming language commonly used with .NET.</div></details>
+<details><summary>2. What does CLR do?</summary><div class="answer">It provides the runtime environment for managed .NET code, including JIT, garbage collection and other runtime services.</div></details>
+<details><summary>3. Explain C# → IL → JIT → CPU.</summary><div class="answer">C# is compiled by Roslyn into IL and metadata in an assembly. The CLR/JIT compiles IL to native machine code for execution.</div></details>
+<details><summary>4. Difference between .csproj and .sln?</summary><div class="answer">.csproj describes/configures one project; .sln groups projects into a solution.</div></details>
+<details><summary>5. Difference between var and dynamic?</summary><div class="answer">var is compile-time type inference. dynamic defers type checking/binding to runtime.</div></details>
+<details><summary>6. Difference between ref and out?</summary><div class="answer">ref requires the caller to initialize the variable; out does not, but the called method must assign it.</div></details>
+<details><summary>7. What are the four pillars of OOP?</summary><div class="answer">Encapsulation, inheritance, polymorphism and abstraction.</div></details>
+<details><summary>8. Difference between readonly and const?</summary><div class="answer">readonly can be assigned at declaration or instance construction; const is a compile-time constant assigned at declaration and is effectively static.</div></details>
+<details><summary>9. What does File.WriteAllText do?</summary><div class="answer">Writes text to a file, replacing existing contents.</div></details>
+<details><summary>10. Why use try/catch?</summary><div class="answer">To handle exceptions and respond appropriately instead of allowing an unhandled exception to terminate the operation/application.</div></details>
+<details><summary>11. Count vs Capacity in List&lt;T&gt;?</summary><div class="answer">Count is the number of elements; Capacity is the current internal storage available before another resize may be required.</div></details>
+<details><summary>12. What is a delegate?</summary><div class="answer">A type that can hold a reference to compatible method(s), allowing methods to be stored, passed, returned and invoked.</div></details>
+<details><summary>13. Action vs Func vs Predicate?</summary><div class="answer">Action returns void; Func returns a value, with its last generic parameter as the return type; Predicate takes one T and returns bool.</div></details>
+<details><summary>14. Where vs Select?</summary><div class="answer">Where filters elements; Select transforms/projects each element.</div></details>
+<details><summary>15. First vs FirstOrDefault?</summary><div class="answer">First throws when no element is found; FirstOrDefault returns the default value when no element is found.</div></details>
+<details><summary>16. What is deferred execution?</summary><div class="answer">Many LINQ queries are evaluated when enumerated/materialized rather than immediately when the query is defined.</div></details>
+<details><summary>17. Write LINQ to find Grade A students.</summary><div class="answer"><code>students.Where(s =&gt; s.Grade == "A").ToList()</code></div></details>
+<details><summary>18. Write LINQ to get student names.</summary><div class="answer"><code>students.Select(s =&gt; s.Name).ToList()</code></div></details>
+<details><summary>19. Write LINQ to find a student by ID.</summary><div class="answer"><code>students.FirstOrDefault(s =&gt; s.Id == id)</code></div></details>
+<details><summary>20. Explain FIFO and LIFO.</summary><div class="answer">FIFO = First In, First Out → Queue. LIFO = Last In, First Out → Stack.</div></details>
+
+<h3>Rapid-fire interview recall</h3>
+<div class="grid">
+<div class="card"><b>Array</b><p>Fixed-size, zero-based.</p></div>
+<div class="card"><b>List</b><p>Dynamic-size generic collection.</p></div>
+<div class="card"><b>Dictionary</b><p>Unique keys + values.</p></div>
+<div class="card"><b>Exception base</b><p><code>System.Exception</code>.</p></div>
+<div class="card"><b>LINQ namespace</b><p><code>System.Linq</code>.</p></div>
+<div class="card"><b>String</b><p>Reference type, immutable.</p></div>
+<div class="card"><b>foreach</b><p>Enumerates a sequence.</p></div>
+<div class="card"><b>GC</b><p>Automatic managed-memory reclamation.</p></div>
+</div>
+</section>
+
+<footer>
+  <p><b>Week 1 complete.</b> Use this page as your revision hub, then practice by rebuilding the Student Management System without copying the code.</p>
+  <p>Tip: If you can explain every bold term without looking, you're ready to move forward.</p>
+</footer>
+</main>
+</div>
+
+<script>
+const root=document.documentElement;
+const themeBtn=document.getElementById('themeBtn');
+const saved=localStorage.getItem('week1-theme');
+if(saved) root.setAttribute('data-theme',saved);
+function updateTheme(){
+  const dark=root.getAttribute('data-theme')==='dark';
+  themeBtn.textContent=dark?'☀ Light':'☾ Dark';
+}
+updateTheme();
+themeBtn.onclick=()=>{
+  const dark=root.getAttribute('data-theme')==='dark';
+  root.setAttribute('data-theme',dark?'light':'dark');
+  localStorage.setItem('week1-theme',dark?'light':'dark');
+  updateTheme();
+};
+
+const search=document.getElementById('search');
+const sections=[...document.querySelectorAll('.topic')];
+search.addEventListener('input',()=>{
+  const q=search.value.trim().toLowerCase();
+  sections.forEach(s=>{
+    s.classList.toggle('hide',q && !s.innerText.toLowerCase().includes(q));
+  });
+});
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('progress').style.width=(h>0?(window.scrollY/h*100):0)+'%';
+});
+const links=[...document.querySelectorAll('#nav a')];
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      links.forEach(a=>a.classList.remove('active'));
+      const a=document.querySelector('#nav a[href="#'+e.target.id+'"]');
+      if(a)a.classList.add('active');
+    }
+  });
+},{rootMargin:'-15% 0px -75% 0px'});
+sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
