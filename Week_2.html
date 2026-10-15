@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 — ASP.NET Core & Web API Master Study Guide</title>
+<style>
+:root{
+  --bg:#f6f8fc; --surface:#fff; --surface2:#eef2f8; --text:#172033; --muted:#5d687d;
+  --primary:#5b5ce2; --primary2:#7b61ff; --border:#dce2ee; --code:#151a27;
+  --success:#14804a; --warning:#a46100; --danger:#c23b3b; --shadow:0 10px 30px rgba(25,35,60,.08);
+}
+[data-theme="dark"]{
+  --bg:#0d1117; --surface:#151b24; --surface2:#1d2633; --text:#e8edf7; --muted:#a8b3c5;
+  --primary:#8b8cff; --primary2:#a98cff; --border:#2c3747; --code:#0a0e14;
+  --success:#55d58b; --warning:#ffc56b; --danger:#ff7d7d; --shadow:0 12px 35px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.65}
+a{color:var(--primary);text-decoration:none}
+button{font:inherit}
+.layout{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;overflow:auto;background:var(--surface);border-right:1px solid var(--border);padding:22px 16px}
+.brand{font-weight:800;font-size:20px;margin-bottom:5px}
+.brand-sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.theme{display:flex;gap:8px;margin-bottom:18px}
+.theme button,.small-btn{border:1px solid var(--border);background:var(--surface2);color:var(--text);border-radius:9px;padding:7px 10px;cursor:pointer}
+.nav-title{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin:18px 8px 7px}
+.nav a{display:block;padding:8px 10px;border-radius:8px;color:var(--text);font-size:13px}
+.nav a:hover{background:var(--surface2);color:var(--primary)}
+.main{max-width:1180px;width:100%;margin:auto;padding:34px 42px 80px}
+.hero{background:linear-gradient(135deg,var(--primary),var(--primary2));color:white;border-radius:24px;padding:38px;box-shadow:var(--shadow);margin-bottom:25px}
+.hero h1{font-size:40px;line-height:1.1;margin:0 0 12px}
+.hero p{max-width:820px;opacity:.94;margin:8px 0}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pill{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.24);padding:6px 10px;border-radius:999px;font-size:12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px;margin:18px 0;box-shadow:var(--shadow)}
+.part{scroll-margin-top:25px;margin-top:42px}
+.part h2{font-size:28px;margin-bottom:5px}
+.part h3{font-size:19px;margin-top:28px}
+h4{margin:18px 0 6px}
+p{color:var(--muted)}
+strong{color:var(--text)}
+ul,ol{padding-left:22px}
+li{margin:5px 0}
+code{font-family:Consolas,Monaco,monospace;background:var(--surface2);padding:2px 5px;border-radius:5px;color:var(--primary)}
+pre{background:var(--code);color:#e8edf7;padding:17px;border-radius:12px;overflow:auto;border:1px solid var(--border)}
+pre code{background:transparent;color:inherit;padding:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px}
+.mini{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px}
+.mini b{display:block;margin-bottom:4px}
+.callout{border-left:4px solid var(--primary);background:var(--surface2);padding:14px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.success{border-left-color:var(--success)} .warning{border-left-color:var(--warning)} .danger{border-left-color:var(--danger)}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}
+th{background:var(--surface2)}
+details{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;margin:10px 0}
+summary{cursor:pointer;font-weight:700}
+.answer{margin-top:10px}
+.tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;background:var(--surface2);color:var(--muted);margin-right:5px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.flow span{background:var(--surface2);border:1px solid var(--border);padding:8px 11px;border-radius:9px;font-size:13px}
+.flow i{color:var(--primary);font-style:normal;font-weight:800}
+.searchbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0}
+.searchbar input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text)}
+.checklist label{display:block;padding:8px;border-bottom:1px solid var(--border)}
+.kbd{font-family:monospace;background:var(--code);color:#fff;padding:2px 6px;border-radius:5px}
+footer{margin-top:60px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:900px){
+ .layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--border)}
+ .main{padding:22px 18px}.hero h1{font-size:31px}
+}
+@media print{
+ .sidebar,.searchbar,.theme{display:none}.layout{display:block}.main{max-width:none;padding:0}
+ .card{box-shadow:none;break-inside:avoid}
+ body{background:white;color:black}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">.NET Week 2</div>
+  <div class="brand-sub">ASP.NET Core & Web API Master Study Guide</div>
+  <div class="theme">
+    <button onclick="setTheme('light')">☀ Light</button>
+    <button onclick="setTheme('dark')">🌙 Dark</button>
+  </div>
+  <div class="nav-title">Study Parts</div>
+  <nav class="nav">
+    <a href="#p1">01 ASP.NET Core Fundamentals</a>
+    <a href="#p2">02 Internet & Web</a>
+    <a href="#p3">03 HTTP Fundamentals</a>
+    <a href="#p4">04 REST & Web API</a>
+    <a href="#p5">05 Program.cs & Startup</a>
+    <a href="#p6">06 Request Pipeline</a>
+    <a href="#p7">07 Controllers</a>
+    <a href="#p8">08 Attributes</a>
+    <a href="#p9">09 Routing</a>
+    <a href="#p10">10 Action Results</a>
+    <a href="#p11">11 JSON</a>
+    <a href="#p12">12 Model Binding</a>
+    <a href="#p13">13 Middleware</a>
+    <a href="#p14">14 Dependency Injection</a>
+    <a href="#p15">15 Configuration</a>
+    <a href="#p16">16 Model Validation</a>
+    <a href="#p17">17 Exception Handling</a>
+    <a href="#p18">18 Logging</a>
+    <a href="#p19">19 LINQ</a>
+    <a href="#revision">Revision & Quiz</a>
+  </nav>
+</aside>
+
+<main class="main">
+<section class="hero">
+  <h1>Week 2 — ASP.NET Core & Web API</h1>
+  <p>A beginner-friendly reference for learning, revising and preparing for interviews/exams. Every Part 1–19 topic covered in our Week 2 learning sequence is included.</p>
+  <div class="pills">
+    <span class="pill">ASP.NET Core</span><span class="pill">HTTP</span><span class="pill">REST</span>
+    <span class="pill">Controllers</span><span class="pill">Middleware</span><span class="pill">DI</span>
+    <span class="pill">Configuration</span><span class="pill">Validation</span><span class="pill">Logging</span><span class="pill">LINQ</span>
+  </div>
+</section>
+
+<div class="searchbar"><input id="search" placeholder="Search this guide, e.g. middleware, IActionResult, LINQ..." oninput="searchGuide()"></div>
+
+<div class="card">
+  <h2>How to use this guide</h2>
+  <div class="grid">
+    <div class="mini"><b>① Learn</b>Read the concept and the “remember” box.</div>
+    <div class="mini"><b>② Recall</b>Use the comparison tables and flows.</div>
+    <div class="mini"><b>③ Test</b>Open hidden answers in the revision quiz.</div>
+    <div class="mini"><b>④ Practice</b>Relate each concept to the Student Management API.</div>
+  </div>
+  <div class="callout success"><strong>Learning rule:</strong> Theory first. The practical Student Management System implementation comes after the theory, and you will write the implementation yourself.</div>
+</div>
+
+<section class="part" id="p1"><h2>Part 1 — ASP.NET Core Fundamentals</h2>
+<div class="card">
+<h3>What is ASP.NET Core?</h3>
+<p>ASP.NET Core is Microsoft's cross-platform framework for building modern web applications, Web APIs, backend services, real-time applications and other server-side solutions using .NET and languages such as C#.</p>
+<h3>Why use ASP.NET Core?</h3>
+<ul><li>Cross-platform: Windows, Linux and macOS.</li><li>High performance and scalable.</li><li>Built-in dependency injection.</li><li>Middleware-based request pipeline.</li><li>Configuration, logging and environment support.</li><li>Works naturally with REST APIs and JSON.</li></ul>
+<h3>C# vs .NET vs ASP.NET Core</h3>
+<table><tr><th>Term</th><th>Meaning</th></tr><tr><td>C#</td><td>Programming language used to write application code.</td></tr><tr><td>.NET</td><td>Platform/runtime, libraries and tooling used to build and run applications.</td></tr><tr><td>ASP.NET Core</td><td>Web framework on top of .NET for web apps and APIs.</td></tr></table>
+<div class="callout"><strong>Remember:</strong> C# is the language → .NET is the platform → ASP.NET Core is the web framework.</div>
+<h3>Types of applications</h3><p>Web APIs, MVC web apps, Razor Pages, real-time applications, minimal APIs and backend services are common ASP.NET Core workloads.</p>
+</div></section>
+
+<section class="part" id="p2"><h2>Part 2 — Internet & Web Fundamentals</h2>
+<div class="card">
+<h3>Internet, Web and Client–Server</h3>
+<p>The Internet is the global network infrastructure. The Web is a system of resources and communication built on top of the Internet, primarily using HTTP/HTTPS.</p>
+<div class="flow"><span>Browser / Client</span><i>→</i><span>HTTP Request</span><i>→</i><span>Web Server</span><i>→</i><span>HTTP Response</span><i>→</i><span>Client</span></div>
+<h3>Protocols</h3><p>Protocols define communication rules. HTTP/HTTPS are used for web communication; DNS resolves domain names to network addresses.</p>
+<h3>DNS</h3><p>DNS translates human-friendly domain names into IP addresses so clients can locate servers.</p>
+<h3>URL structure</h3><pre><code>https://example.com:443/api/students/10?grade=A#details</code></pre>
+<ul><li><strong>https</strong> — scheme/protocol</li><li><strong>example.com</strong> — host/domain</li><li><strong>443</strong> — port</li><li><strong>/api/students/10</strong> — path</li><li><strong>?grade=A</strong> — query string</li><li><strong>#details</strong> — fragment</li></ul>
+<h3>Web servers</h3><p>Kestrel is ASP.NET Core's cross-platform web server. IIS, Nginx and Apache can also be involved in hosting/reverse-proxy architectures.</p>
+<h3>localhost and ports</h3><p><code>localhost</code> refers to the current machine. A port identifies a network endpoint for an application. Example: <code>http://localhost:5257</code>.</p>
+</div></section>
+
+<section class="part" id="p3"><h2>Part 3 — HTTP Fundamentals</h2>
+<div class="card">
+<h3>HTTP Request & Response</h3>
+<pre><code>Request:
+Method + URL + Headers + Body
+
+Response:
+Status Code + Headers + Body</code></pre>
+<h3>HTTP Methods</h3>
+<table><tr><th>Method</th><th>Typical purpose</th></tr>
+<tr><td>GET</td><td>Retrieve data</td></tr><tr><td>POST</td><td>Create/process a new resource</td></tr>
+<tr><td>PUT</td><td>Replace/update a resource</td></tr><tr><td>PATCH</td><td>Partially update a resource</td></tr><tr><td>DELETE</td><td>Delete a resource</td></tr></table>
+<h3>Headers</h3><ul><li><strong>Content-Type</strong> — format of data being sent.</li><li><strong>Accept</strong> — formats the client wants in the response.</li></ul>
+<p>Example: <code>Content-Type: application/json</code>.</p>
+<h3>Status codes</h3>
+<table><tr><th>Range</th><th>Meaning</th></tr><tr><td>1xx</td><td>Informational</td></tr><tr><td>2xx</td><td>Success</td></tr><tr><td>3xx</td><td>Redirection</td></tr><tr><td>4xx</td><td>Client/request problem</td></tr><tr><td>5xx</td><td>Server problem</td></tr></table>
+<div class="grid">
+<div class="mini"><b>200 OK</b>Successful request.</div><div class="mini"><b>201 Created</b>Resource created.</div>
+<div class="mini"><b>204 No Content</b>Success with no response body.</div><div class="mini"><b>400 Bad Request</b>Invalid request/input.</div>
+<div class="mini"><b>401 Unauthorized</b>Authentication is required/missing/invalid.</div><div class="mini"><b>403 Forbidden</b>Authenticated but not allowed.</div>
+<div class="mini"><b>404 Not Found</b>Requested resource/endpoint not found.</div><div class="mini"><b>409 Conflict</b>Request conflicts with current state.</div>
+<div class="mini"><b>500 Internal Server Error</b>Unexpected server failure.</div>
+</div>
+<h3>Statelessness</h3><p>HTTP is stateless: each request contains the information needed to process it; the protocol itself does not require the server to remember previous requests.</p>
+<h3>Safe vs Idempotent</h3><p><strong>Safe</strong> means the method is intended not to modify resource state. <strong>Idempotent</strong> means repeating the same request has the same intended effect on server state. GET, PUT and DELETE are generally idempotent; POST generally is not.</p>
+<h3>HTTPS/TLS</h3><p>HTTPS is HTTP protected by TLS, providing encryption and server authentication.</p>
+</div></section>
+
+<section class="part" id="p4"><h2>Part 4 — REST & Web API Fundamentals</h2>
+<div class="card">
+<h3>API vs Web API</h3><p>An API is a contract/interface for software communication. A Web API exposes functionality over web protocols, commonly HTTP.</p>
+<h3>REST</h3><p>REST is an architectural style for designing networked applications around resources and uniform interactions.</p>
+<h3>Resource and Endpoint</h3><p>A <strong>resource</strong> is a domain object such as Student. An <strong>endpoint</strong> is an HTTP-accessible operation identified by method + route.</p>
+<pre><code>GET /api/students
+GET /api/students/10
+POST /api/students
+PUT /api/students/10
+DELETE /api/students/10</code></pre>
+<h3>CRUD</h3><p>Create, Read, Update, Delete.</p>
+<h3>Route vs Query Parameters</h3><p><code>/api/students/10</code> uses a route parameter to identify a specific resource. <code>/api/students?grade=A</code> uses a query parameter to filter/customize a collection.</p>
+<h3>REST constraints</h3>
+<ul><li>Client–Server</li><li>Stateless</li><li>Cacheable</li><li>Uniform Interface</li><li>Layered System</li><li>Code-on-Demand is optional</li></ul>
+<p>Mnemonic: <strong>CSC ULC</strong> — Client-Server, Stateless, Cacheable, Uniform Interface, Layered System, Code-on-Demand.</p>
+<h3>HATEOAS</h3><p>Hypermedia as the Engine of Application State: responses can provide links/actions that help clients discover related resources.</p>
+<div class="callout"><strong>RESTful API:</strong> A Web API designed to follow REST principles, using resources, HTTP methods, stateless interactions and meaningful representations/status codes.</div>
+</div></section>
+
+<section class="part" id="p5"><h2>Part 5 — Program.cs & Application Startup</h2>
+<div class="card">
+<h3>Program.cs</h3><p>In modern ASP.NET Core, <code>Program.cs</code> is the main startup/configuration file. The Minimal Hosting Model combines application setup in one place.</p>
+<h3>Top-level statements</h3><p>Modern C# can omit an explicit <code>Main()</code>; the compiler generates the entry-point structure behind the scenes.</p>
+<h3>Builder and application</h3>
+<pre><code>CreateBuilder()
+    ↓
+WebApplicationBuilder
+    ↓
+builder.Services
+    ↓
+Build()
+    ↓
+WebApplication
+    ↓
+Configure pipeline
+    ↓
+Run()</code></pre>
+<table><tr><th>Concept</th><th>Meaning</th></tr><tr><td><code>WebApplication.CreateBuilder(args)</code></td><td>Creates/configures the application builder.</td></tr><tr><td><code>builder.Services</code></td><td>Service registration collection used to configure DI.</td></tr><tr><td><code>builder.Build()</code></td><td>Builds the WebApplication.</td></tr><tr><td><code>app</code></td><td>Configured web application/pipeline.</td></tr><tr><td><code>app.Run()</code></td><td>Starts the application and waits for requests.</td></tr></table>
+<h3>Host and Kestrel</h3><p>The host manages application lifetime and infrastructure. Kestrel is the web server that listens for HTTP/HTTPS traffic and passes requests into ASP.NET Core.</p>
+<h3>Minimal Hosting Model</h3><p>Modern .NET commonly uses a single <code>Program.cs</code> instead of the older separate <code>Startup.cs</code> pattern.</p>
+</div></section>
+
+<section class="part" id="p6"><h2>Part 6 — ASP.NET Core Application & Request Pipeline</h2>
+<div class="card">
+<h3>Request Pipeline</h3>
+<pre><code>Client
+  ↓
+Kestrel
+  ↓
+ASP.NET Core
+  ↓
+Middleware Pipeline
+  ↓
+Routing
+  ↓
+Endpoint
+  ↓
+Controller Action
+  ↓
+HTTP Response
+  ↓
+Middleware
+  ↓
+Kestrel
+  ↓
+Client</code></pre>
+<h3>HttpContext</h3><p><code>HttpContext</code> represents the current HTTP request/response context. It gives access to request, response, user, connection, per-request services, items and lower-level features.</p>
+<h3>Important Program.cs methods</h3>
+<ul><li><code>app.UseHttpsRedirection()</code> redirects HTTP requests to HTTPS when configured; it is not simply “redirecting ports.”</li><li><code>app.MapControllers()</code> maps controller endpoints into endpoint routing.</li><li><code>app.Run()</code> starts the application.</li></ul>
+<h3>OpenAPI</h3><p>OpenAPI describes an HTTP API in a machine-readable format. In the newer template, <code>app.MapOpenApi()</code> can expose an OpenAPI document such as <code>/openapi/v1.json</code>. Swagger UI is a separate interactive UI that can consume an OpenAPI description.</p>
+</div></section>
+
+<section class="part" id="p7"><h2>Part 7 — Controllers</h2>
+<div class="card">
+<h3>What is a Controller?</h3><p>A controller is a class that handles HTTP requests and produces HTTP responses for API endpoints.</p>
+<h3>ControllerBase vs Controller</h3><p><code>ControllerBase</code> provides API-oriented controller features. <code>Controller</code> extends it with MVC/view-related capabilities. Web APIs commonly use <code>ControllerBase</code>.</p>
+<h3>[ApiController]</h3><p>Marks a controller as an API controller and enables API-specific conventions/behaviors such as automatic model-validation responses and binding inference.</p>
+<h3>[Route]</h3><p>Defines a route template. <code>[Route("api/[controller]")]</code> uses the controller name token.</p>
+<h3>Action Methods</h3><p>Public controller methods that respond to HTTP requests when matched by routing.</p>
+<h3>HTTP action attributes</h3><p><code>[HttpGet]</code>, <code>[HttpPost]</code>, <code>[HttpPut]</code>, <code>[HttpPatch]</code>, <code>[HttpDelete]</code> associate actions with HTTP methods.</p>
+<div class="callout"><strong>Endpoint formula:</strong> HTTP method + route template + action/endpoint mapping.</div>
+</div></section>
+
+<section class="part" id="p8"><h2>Part 8 — C# Attributes in ASP.NET Core</h2>
+<div class="card">
+<h3>What is an Attribute?</h3><p>A C# attribute attaches metadata to a class, method, property, parameter or other code element. ASP.NET Core reads this metadata to configure behavior.</p>
+<h3>Important attributes</h3>
+<table><tr><th>Attribute</th><th>Purpose</th></tr>
+<tr><td><code>[ApiController]</code></td><td>API-controller behavior.</td></tr>
+<tr><td><code>[Route]</code></td><td>Route template.</td></tr>
+<tr><td><code>[HttpGet]</code> etc.</td><td>HTTP method mapping.</td></tr>
+<tr><td><code>[FromRoute]</code></td><td>Bind value from route.</td></tr>
+<tr><td><code>[FromQuery]</code></td><td>Bind from query string.</td></tr>
+<tr><td><code>[FromBody]</code></td><td>Bind from request body.</td></tr>
+<tr><td><code>[FromHeader]</code></td><td>Bind from header.</td></tr>
+<tr><td><code>[FromForm]</code></td><td>Bind from form data.</td></tr></table>
+<h3>Route templates</h3><pre><code>[Route("api/[controller]")]
+[HttpGet("{id:int}")]</code></pre>
+<p><code>{id}</code> is a route parameter. <code>:int</code> is a route constraint. Controller-level routes can combine with action-level route templates.</p>
+</div></section>
+
+<section class="part" id="p9"><h2>Part 9 — Routing & Endpoint Routing</h2>
+<div class="card">
+<h3>Routing</h3><p>Routing matches an incoming HTTP request to an endpoint.</p>
+<h3>Route template vs actual URL vs endpoint</h3>
+<table><tr><th>Term</th><th>Example</th></tr><tr><td>Route template</td><td><code>/api/students/{id}</code></td></tr><tr><td>Actual request</td><td><code>/api/students/10</code></td></tr><tr><td>Endpoint</td><td><code>GET /api/students/{id}</code></td></tr><tr><td>Route value</td><td><code>id = 10</code></td></tr></table>
+<h3>Endpoint Routing</h3><p>ASP.NET Core's endpoint routing system builds a set of endpoints and matches incoming requests against them.</p>
+<h3>Registration vs Matching</h3><p><code>MapControllers()</code> maps controller endpoints into the endpoint system. When a request arrives, routing matches the request to the appropriate endpoint.</p>
+<h3>HTTP method matching</h3><p>The same path can have different endpoints for different methods, e.g. GET and POST.</p>
+<h3>Constraints and ambiguity</h3><p>Constraints such as <code>{id:int}</code> narrow route matches. Ambiguous routes can cause an ambiguity error when more than one endpoint matches equally.</p>
+<h3>Routing vs Model Binding</h3><div class="grid"><div class="mini"><b>Routing</b>Which endpoint/action should handle this request?</div><div class="mini"><b>Model Binding</b>What values should be supplied to that action's parameters/models?</div></div>
+<p>Query strings generally do not change route matching: <code>GET /api/students?grade=A</code> still matches <code>/api/students</code>.</p>
+</div></section>
+
+<section class="part" id="p10"><h2>Part 10 — Action Results</h2>
+<div class="card">
+<h3>What is an Action Result?</h3><p>An action result represents the HTTP response produced by a controller action.</p>
+<table><tr><th>Result</th><th>Status</th><th>Typical meaning</th></tr>
+<tr><td><code>Ok()</code></td><td>200</td><td>Successful response without body.</td></tr><tr><td><code>Ok(object)</code></td><td>200</td><td>Successful response with body.</td></tr>
+<tr><td><code>Created()</code></td><td>201</td><td>Resource created.</td></tr><tr><td><code>CreatedAtAction()</code></td><td>201</td><td>Created and points to retrieval endpoint.</td></tr>
+<tr><td><code>BadRequest()</code></td><td>400</td><td>Invalid request.</td></tr><tr><td><code>NotFound()</code></td><td>404</td><td>Requested resource not found.</td></tr>
+<tr><td><code>NoContent()</code></td><td>204</td><td>Success with no body.</td></tr></table>
+<h3>IActionResult</h3><p><code>IActionResult</code> is an abstraction that allows an action to return different HTTP result types.</p>
+<h3>ActionResult&lt;T&gt;</h3><p><code>ActionResult<Student></code> communicates that a successful result can contain a Student while still allowing other HTTP results such as NotFound.</p>
+<h3>Object serialization</h3><p>When you return an object such as <code>Ok(student)</code>, ASP.NET Core processes the result and serializes the object to JSON for the HTTP response.</p>
+</div></section>
+
+<section class="part" id="p11"><h2>Part 11 — JSON Serialization & Deserialization</h2>
+<div class="card">
+<h3>JSON</h3><p>JSON is a text-based format commonly used to represent and exchange structured data between clients and APIs.</p>
+<h3>Serialization</h3><p><strong>C# object → JSON</strong></p>
+<h3>Deserialization</h3><p><strong>JSON → C# object</strong></p>
+<pre><code>Request:
+JSON body
+   ↓
+Deserialization
+   ↓
+C# object
+
+Response:
+C# object
+   ↓
+Serialization
+   ↓
+JSON response</code></pre>
+<h3>System.Text.Json</h3><p><code>System.Text.Json</code> is the built-in/default JSON library in modern .NET.</p>
+<h3>Content-Type</h3><p>JSON requests commonly use <code>Content-Type: application/json</code>.</p>
+<h3>JSON and Model Binding</h3><p>For a JSON request body, deserialization is part of the broader process that helps model binding supply the controller parameter/model. Model binding is broader because it can also use route, query, header and form data.</p>
+</div></section>
+
+<section class="part" id="p12"><h2>Part 12 — Model Binding</h2>
+<div class="card">
+<h3>Definition</h3><p>Model binding takes values from an HTTP request and supplies them to controller action parameters or models.</p>
+<h3>Binding sources</h3>
+<ul><li>Route values</li><li>Query string</li><li>Request body</li><li>Headers</li><li>Form data</li></ul>
+<h3>Binding attributes</h3><p><code>[FromRoute]</code>, <code>[FromQuery]</code>, <code>[FromBody]</code>, <code>[FromHeader]</code>, <code>[FromForm]</code>.</p>
+<h3>Automatic binding and [ApiController]</h3><p>ASP.NET Core can infer common binding sources. <code>[ApiController]</code> provides API-specific binding inference/conventions.</p>
+<h3>Type conversion</h3><p>Binding can convert incoming values to target C# types when possible. For example, route text <code>"25"</code> can become <code>int 25</code>.</p>
+<h3>Binding vs JSON deserialization</h3><table><tr><th>Deserialization</th><th>Model Binding</th></tr><tr><td>JSON/data format → C# object.</td><td>HTTP request data → action parameter/model.</td></tr><tr><td>Specific data-format concern.</td><td>Broader request-data process.</td></tr></table>
+<div class="callout warning"><strong>Important:</strong> A route constraint can prevent an endpoint match before binding. A binding conversion failure can instead create model-state errors; with <code>[ApiController]</code>, invalid model state commonly results in 400.</div>
+</div></section>
+
+<section class="part" id="p13"><h2>Part 13 — Middleware</h2>
+<div class="card">
+<h3>What is Middleware?</h3><p>Middleware is a component in the ASP.NET Core request pipeline that can inspect/modify requests and responses, perform work before/after the next component, or terminate the pipeline.</p>
+<h3>Cross-cutting concerns</h3><p>Logging, exception handling, authentication, authorization, security, caching and compression are examples.</p>
+<h3>Short-circuiting</h3><p>A middleware short-circuits when it chooses not to call the next component and completes the response itself. It is not synonymous with an exception.</p>
+<h3>RequestDelegate</h3><p><code>RequestDelegate</code> represents a method/delegate that processes an <code>HttpContext</code>, commonly representing the next pipeline step.</p>
+<h3>HttpContext components</h3>
+<table><tr><th>Property</th><th>Purpose</th></tr><tr><td>Request</td><td>Incoming HTTP request.</td></tr><tr><td>Response</td><td>Outgoing HTTP response.</td></tr><tr><td>User</td><td>Identity, claims and authentication state.</td></tr><tr><td>Items</td><td>Temporary per-request storage.</td></tr><tr><td>Connection</td><td>Connection information.</td></tr><tr><td>RequestServices</td><td>DI services available for the request.</td></tr><tr><td>Features</td><td>Lower-level server/framework capabilities.</td></tr></table>
+<h3>Use, Run and Map</h3><ul><li><code>Use()</code> — middleware that can run before/after and call next.</li><li><code>Run()</code> — terminal middleware; doesn't continue the pipeline.</li><li><code>Map()</code> — branches the pipeline for a path/predicate.</li></ul>
+<h3>Ordering</h3><p>Middleware order matters because each component sees the request/response at its position in the pipeline.</p>
+<h3>Built-in middleware concepts</h3><p>Exception handling, HTTPS redirection, static files, routing, authentication, authorization and response compression.</p>
+<h3>Authentication vs Authorization</h3><p><strong>Authentication:</strong> Who are you? <strong>Authorization:</strong> Are you allowed to perform this action?</p>
+<h3>Kestrel</h3><p>Kestrel receives HTTP/HTTPS requests, participates in creating request context, passes requests into the ASP.NET Core pipeline and sends responses back to clients.</p>
+<div class="callout"><strong>Pipeline lifecycle:</strong> The pipeline is configured at startup and reused across requests; each request gets its own <code>HttpContext</code>.</div>
+</div></section>
+
+<section class="part" id="p14"><h2>Part 14 — Dependency Injection</h2>
+<div class="card">
+<h3>Dependency</h3><p>A dependency is something a class needs in order to perform its work.</p>
+<h3>Dependency Injection</h3><p>DI provides dependencies from outside the class instead of the class constructing them itself.</p>
+<h3>Benefits</h3><ul><li>Loose coupling</li><li>Easier testing</li><li>Replaceable implementations</li><li>Better maintainability</li><li>Separation of responsibilities</li></ul>
+<h3>Types of injection</h3><ul><li><strong>Constructor injection</strong> — preferred/common in ASP.NET Core.</li><li>Property injection</li><li>Method injection</li></ul>
+<h3>DI Container</h3><p>The DI system manages registrations, creates/resolves objects and manages their lifetimes.</p>
+<h3>builder.Services</h3><p><code>builder.Services</code> is the service-registration collection used to configure the DI container.</p>
+<h3>Service lifetimes</h3>
+<table><tr><th>Lifetime</th><th>Meaning</th></tr><tr><td>Transient</td><td>New instance each time it is requested.</td></tr><tr><td>Scoped</td><td>One instance per HTTP request/scope.</td></tr><tr><td>Singleton</td><td>One instance for the application lifetime.</td></tr></table>
+<h3>Registration methods</h3><p><code>AddTransient()</code>, <code>AddScoped()</code>, <code>AddSingleton()</code>.</p>
+<h3>Interfaces and DI</h3><p>Interfaces are often used to reduce coupling and make testing/replacement easier.</p>
+<h3>RequestServices</h3><p><code>HttpContext.RequestServices</code> provides access to request-scoped services. Constructor injection is generally preferred over manually resolving services.</p>
+<div class="callout warning"><strong>Project decision:</strong> Our current Student Management System does not introduce a separate StudentService layer yet. DI is being learned as a concept and through framework infrastructure such as logging.</div>
+</div></section>
+
+<section class="part" id="p15"><h2>Part 15 — Configuration</h2>
+<div class="card">
+<h3>Configuration Fundamentals</h3><p>Configuration is data/settings that control application behavior without changing application code.</p>
+<div class="grid"><div class="mini"><b>Application Logic</b>Defines what the application does.</div><div class="mini"><b>Configuration</b>Provides values/settings used by that behavior.</div></div>
+<h3>Common sources</h3><ul><li><code>appsettings.json</code> — base configuration.</li><li><code>appsettings.Development.json</code> — environment-specific overrides.</li><li>User Secrets — development-time secrets.</li><li>Environment variables — deployment/runtime configuration.</li><li>Command-line arguments — runtime overrides.</li><li>Custom providers — database, REST API, etc.</li><li>Azure Key Vault — secure secret/key/certificate management.</li></ul>
+<h3>Hierarchical configuration</h3>
+<pre><code>{
+  "StudentSettings": {
+    "MaxStudents": 100,
+    "DefaultGrade": "A"
+  }
+}</code></pre>
+<p>Keys conceptually become <code>StudentSettings:MaxStudents</code> and <code>StudentSettings:DefaultGrade</code>.</p>
+<h3>IConfiguration</h3><p><code>IConfiguration</code> is a unified abstraction for reading configuration from multiple providers.</p>
+<h3>Reading configuration</h3><ul><li>Indexer: <code>configuration["StudentSettings:MaxStudents"]</code></li><li><code>GetValue&lt;T&gt;()</code> — reads/converts a typed value.</li><li><code>GetSection()</code> — gets a configuration section.</li><li><code>IConfigurationSection</code> — represents a specific section.</li><li><code>GetChildren()</code> — gets child sections.</li></ul>
+<h3>Provider precedence</h3>
+<pre><code>appsettings.json
+      ↓
+appsettings.{Environment}.json
+      ↓
+User Secrets
+      ↓
+Environment Variables
+      ↓
+Command-Line Arguments</code></pre>
+<p>Later providers override earlier values for the same key in this simplified ordering.</p>
+<h3>Environment variables</h3><p><code>StudentSettings__MaxStudents</code> maps to <code>StudentSettings:MaxStudents</code>. Double underscore <code>__</code> represents hierarchy.</p>
+<h3>Strongly Typed Configuration</h3><p>Configuration can be bound to a C# class. The binder maps matching configuration keys/properties. Extra configuration values are generally ignored; missing class properties retain defaults unless validation/defaulting changes the outcome.</p>
+<h3>Options Pattern</h3><ul><li><code>Configure&lt;T&gt;()</code> — registers configuration for an options class.</li><li><code>IOptions&lt;T&gt;</code> — basic options access.</li><li><code>IOptionsSnapshot&lt;T&gt;</code> — scoped/request-based options, supporting updated values between requests when reload is supported.</li><li><code>IOptionsMonitor&lt;T&gt;</code> — monitors changes and supports current values/change notifications.</li></ul>
+<h3>Configuration validation</h3><p>Binding maps values; validation checks whether those values satisfy rules. Data annotations such as <code>[Required]</code> and <code>[Range]</code> or custom validation can be used.</p>
+<h3>User Secrets vs Azure Key Vault</h3><table><tr><th>User Secrets</th><th>Azure Key Vault</th></tr><tr><td>Primarily local development.</td><td>Secure centralized secret/key/certificate management, commonly Azure/production.</td></tr></table>
+<h3>Custom providers</h3><p>A custom provider can load settings from a database, REST API or another custom source.</p>
+</div></section>
+
+<section class="part" id="p16"><h2>Part 16 — Model Validation</h2>
+<div class="card">
+<h3>What is Model Validation?</h3><p>Model validation checks whether incoming data satisfies rules defined by the application.</p>
+<pre><code>HTTP Request
+   ↓
+Routing
+   ↓
+Model Binding
+   ↓
+Validation
+   ↓
+Valid? ── No → 400 Bad Request
+   ↓ Yes
+Controller Action</code></pre>
+<h3>Model Binding vs Validation</h3><table><tr><th>Model Binding</th><th>Model Validation</th></tr><tr><td>Gets data from HTTP request and supplies action parameters/models.</td><td>Checks whether the supplied data is acceptable.</td></tr></table>
+<h3>Data Annotations</h3><p>Common validation attributes come from <code>System.ComponentModel.DataAnnotations</code>.</p>
+<table><tr><th>Attribute</th><th>Meaning</th></tr><tr><td><code>[Required]</code></td><td>A value must be provided.</td></tr><tr><td><code>[Range(5,100)]</code></td><td>Value is between 5 and 100 inclusive by default.</td></tr><tr><td><code>[StringLength]</code></td><td>Controls maximum/minimum string length.</td></tr><tr><td><code>[MinLength]</code></td><td>Minimum length.</td></tr><tr><td><code>[MaxLength]</code></td><td>Maximum length.</td></tr><tr><td><code>[EmailAddress]</code></td><td>Email-like format validation.</td></tr><tr><td><code>[Phone]</code></td><td>Phone-number-like format.</td></tr><tr><td><code>[Url]</code></td><td>URL format.</td></tr></table>
+<h3>ModelState</h3><p><code>ModelState</code> contains information about model binding and validation, including errors. <code>ModelState.IsValid</code> is true when there are no model-state errors.</p>
+<h3>[ApiController]</h3><p>For API controllers, invalid model state can automatically result in a 400 Bad Request response.</p>
+<h3>Binding vs validation errors</h3><div class="grid"><div class="mini"><b>Binding error</b><code>Age = "hello"</code> cannot be converted to <code>int</code>.</div><div class="mini"><b>Validation error</b><code>Age = 150</code> is an <code>int</code> but violates <code>[Range]</code>.</div></div>
+<h3>Custom validation</h3><p>Built-in attributes handle common rules. Custom attributes, <code>IValidatableObject</code> and other validation mechanisms can handle application-specific rules.</p>
+<h3>Validation vs business logic</h3><p>Validation asks “Is this input acceptable?” Business logic asks “What should the application do with valid input?”</p>
+<h3>Nullable reference types</h3><p><code>string?</code> indicates that C# allows null. <code>[Required]</code> expresses an application validation requirement. They are related but not the same mechanism.</p>
+</div></section>
+
+<section class="part" id="p17"><h2>Part 17 — Global Exception Handling</h2>
+<div class="card">
+<h3>Exception</h3><p>An exception is an unexpected runtime problem, such as <code>NullReferenceException</code>, <code>InvalidOperationException</code>, <code>FormatException</code> or <code>ArgumentException</code>.</p>
+<h3>Validation vs Exception</h3><table><tr><th>Validation</th><th>Exception</th></tr><tr><td>Expected invalid input.</td><td>Unexpected runtime/application failure.</td></tr><tr><td>Often 400.</td><td>Often 500.</td></tr></table>
+<h3>Why global exception handling?</h3><ul><li>Consistent error responses</li><li>Less duplicate try/catch code</li><li>Security</li><li>Centralized logging</li><li>Maintainability</li></ul>
+<h3>Exception middleware</h3><p>Because middleware surrounds deeper pipeline components, exception handling middleware can catch/observe unhandled exceptions and convert them into safe HTTP responses.</p>
+<h3>UseExceptionHandler</h3><p><code>UseExceptionHandler</code> is built-in ASP.NET Core middleware for handling unhandled exceptions centrally.</p>
+<h3>Developer Exception Page</h3><p>Useful in Development for detailed debugging information. Do not expose detailed internal exception information to production users.</p>
+<h3>Problem Details</h3><p>Problem Details provides a standardized structure for HTTP API errors, commonly containing <code>type</code>, <code>title</code>, <code>status</code>, <code>detail</code> and <code>instance</code>.</p>
+<h3>Exception vs Problem Details</h3><p>An exception is an internal runtime failure. Problem Details is an HTTP response representation used to communicate an error to a client.</p>
+<h3>Known vs unexpected errors</h3><p>Not every exception necessarily maps to 500. A known application condition such as a not-found condition can be mapped to 404 when appropriate. Unexpected infrastructure/application failures commonly become 500.</p>
+<h3>Security</h3><p>Do not expose stack traces, connection strings, internal paths, SQL details or other sensitive implementation details to production clients.</p>
+<div class="callout"><strong>Typical flow:</strong> Exception → global handler → log detailed information → create safe HTTP response/Problem Details → client.</div>
+</div></section>
+
+<section class="part" id="p18"><h2>Part 18 — Logging</h2>
+<div class="card">
+<h3>Logging Fundamentals</h3><p>Logging records information about what is happening inside an application. A log is one recorded event/message.</p>
+<h3>Logging vs Debugging</h3><p>Debugging is active investigation using tools such as breakpoints and variable inspection. Logging records information that can be reviewed later.</p>
+<h3>Logging vs Exception Handling</h3><p>Exception handling decides how to handle a failure. Logging records information about what happened. They commonly work together.</p>
+<h3>Why Console.WriteLine is insufficient</h3><ul><li>No standard log levels.</li><li>Weak filtering capabilities.</li><li>Not structured by default.</li><li>No flexible provider architecture.</li><li>Harder integration with centralized monitoring and production systems.</li></ul>
+<h3>ILogger</h3><p><code>ILogger</code> is the logging abstraction used by .NET applications. Application code does not need to know which provider ultimately stores or displays the log.</p>
+<h3>ILogger&lt;T&gt; and categories</h3><p><code>ILogger&lt;StudentsController&gt;</code> associates the logger with a category based on the type. Categories help filtering and identifying log sources.</p>
+<h3>DI and logging</h3><p>Logging is integrated with DI. Controllers/components commonly receive <code>ILogger&lt;T&gt;</code> through constructor injection.</p>
+<h3>Logging providers</h3><ul><li>Console Provider</li><li>Debug Provider</li><li>Event Source Provider</li><li>Event Log Provider</li><li>Azure Monitor / Application Insights overview</li><li>Third-party: Serilog, NLog, log4net</li></ul>
+<h3>Log levels</h3>
+<table><tr><th>Level</th><th>Meaning</th></tr><tr><td>Trace</td><td>Very detailed diagnostics.</td></tr><tr><td>Debug</td><td>Developer-focused diagnostic information.</td></tr><tr><td>Information</td><td>Normal important application activity.</td></tr><tr><td>Warning</td><td>Concerning/unusual situation, but operation can continue.</td></tr><tr><td>Error</td><td>A specific operation failed.</td></tr><tr><td>Critical</td><td>Severe failure affecting major functionality or requiring urgent attention.</td></tr></table>
+<h3>Filtering</h3><p>Log filtering controls which levels/categories/providers are processed. Example: production may use Information and above while noisy framework categories may be limited to Warning.</p>
+<h3>Logging configuration</h3><p>Logging can be configured through <code>appsettings.json</code>, including default log level, category/namespace filtering and provider-specific filtering.</p>
+<h3>Structured Logging</h3><p>Structured logging uses message templates and named properties.</p>
+<pre><code>"Student {StudentId} was retrieved"</code></pre>
+<p>Here <code>StudentId</code> can be preserved as structured data, improving searchability, filtering and analysis.</p>
+<h3>Exception logging</h3><p><code>LogError()</code> is appropriate for operation failures; <code>LogCritical()</code> is for severe failures. When logging an exception, pass the exception object when appropriate rather than only its message so useful exception information can be captured.</p>
+<h3>Logging internals</h3>
+<pre><code>Application
+   ↓
+ILogger&lt;T&gt;
+   ↓
+Logger
+   ↓
+Log-level check
+   ↓
+Logging infrastructure
+   ↓
+Providers
+   ↓
+Console / Debug / Azure / etc.</code></pre>
+<p><code>ILoggerFactory</code> can create loggers. The category is commonly based on the type passed to <code>ILogger&lt;T&gt;</code>.</p>
+<h3>Best practices</h3><ul><li>Log important application events, failures, warnings and useful identifiers.</li><li>Do not log passwords, JWT tokens, API keys, secrets or connection strings.</li><li>Be careful with PII and other sensitive information.</li><li>Production logs should be useful, secure, appropriately detailed and searchable.</li></ul>
+<h3>Logging Scopes</h3><p>A scope associates shared contextual information with multiple log entries, such as a request identifier.</p>
+<h3>Correlation IDs</h3><p>A correlation ID identifies a request/operation so related logs across components or services can be connected.</p>
+<h3>Distributed Tracing</h3><p>Distributed tracing follows a request across multiple services/operations. A trace represents an overall operation; spans represent individual operations.</p>
+<h3>OpenTelemetry</h3><p>OpenTelemetry is an open-source observability framework/ecosystem for collecting and exporting telemetry such as logs, metrics and traces.</p>
+</div></section>
+
+<section class="part" id="p19"><h2>Part 19 — LINQ & Querying</h2>
+<div class="card">
+<h3>What is LINQ?</h3><p>LINQ means <strong>Language Integrated Query</strong>. It provides C# syntax and operators for querying data from collections and other queryable data sources.</p>
+<h3>LINQ Execution Pipeline</h3>
+<pre><code>Data Source
+   ↓
+LINQ Query
+   ↓
+Operators
+   ↓
+Execution
+   ↓
+Result</code></pre>
+<h3>Deferred Execution</h3><p>The query is defined but not executed until the sequence is enumerated or an immediate operator requests the result.</p>
+<h3>Immediate Execution</h3><p>Operators such as <code>ToList()</code>, <code>ToArray()</code>, <code>ToHashSet()</code>, <code>First()</code>, <code>FirstOrDefault()</code>, <code>Single()</code>, <code>SingleOrDefault()</code>, <code>Any()</code>, <code>All()</code> and <code>Contains()</code> execute/produce a result immediately.</p>
+<h3>yield return</h3><p><code>yield return</code> creates iterator behavior, producing values one at a time as they are requested rather than returning the entire sequence from the method at once.</p>
+<h3>IEnumerable&lt;T&gt;</h3><p>Represents a sequence that can be enumerated. LINQ-to-Objects commonly operates over in-memory collections using <code>IEnumerable&lt;T&gt;</code>.</p>
+<h3>IQueryable&lt;T&gt;</h3><p>Represents a query that can be interpreted by a query provider. Entity Framework Core can translate suitable LINQ expressions into SQL so filtering can occur in the database.</p>
+<table><tr><th>IEnumerable&lt;T&gt;</th><th>IQueryable&lt;T&gt;</th></tr><tr><td>Enumerable sequence; commonly in-memory.</td><td>Query representation for a provider.</td></tr><tr><td>LINQ operations generally execute in application process.</td><td>Provider may translate operations to source language.</td></tr><tr><td>LINQ to Objects.</td><td>Commonly used by EF Core/database queries.</td></tr></table>
+<h3>Searching Operators</h3>
+<table><tr><th>Operator</th><th>Behavior</th></tr><tr><td><code>First()</code></td><td>First element; exception if none.</td></tr><tr><td><code>FirstOrDefault()</code></td><td>First element; default if none.</td></tr><tr><td><code>Single()</code></td><td>Exactly one; exception if zero or multiple.</td></tr><tr><td><code>SingleOrDefault()</code></td><td>Zero or one; default for zero, exception for multiple.</td></tr><tr><td><code>Where()</code></td><td>All elements matching a condition.</td></tr><tr><td><code>ElementAt()</code></td><td>Element at index; exception if index invalid.</td></tr><tr><td><code>ElementAtOrDefault()</code></td><td>Element at index; default if invalid.</td></tr></table>
+<h3>First vs Single</h3><p><strong>First</strong> means “give me the first match.” <strong>Single</strong> means “there must be exactly one match.”</p>
+<h3>Ordering</h3><ul><li><code>OrderBy()</code> — primary ascending order.</li><li><code>OrderByDescending()</code> — primary descending order.</li><li><code>ThenBy()</code> — secondary ascending order.</li><li><code>ThenByDescending()</code> — secondary descending order.</li></ul>
+<pre><code>OrderBy(Grade)
+ThenBy(Name)</code></pre>
+<p>First sort by Grade, then sort equal-grade records by Name.</p>
+<h3>Quantifiers</h3><table><tr><th>Operator</th><th>Question answered</th></tr><tr><td><code>Any()</code></td><td>Does at least one element/match exist?</td></tr><tr><td><code>All()</code></td><td>Do all elements satisfy the condition?</td></tr><tr><td><code>Contains()</code></td><td>Does this value exist in the sequence?</td></tr></table>
+<h3>Conversion / Materialization</h3><ul><li><code>ToList()</code> → <code>List&lt;T&gt;</code></li><li><code>ToArray()</code> → <code>T[]</code></li><li><code>ToHashSet()</code> → <code>HashSet&lt;T&gt;</code> with uniqueness determined by equality semantics.</li></ul>
+<div class="callout success"><strong>Student API connection:</strong> LINQ will later help filter students by grade/status, sort them, find a student by ID and materialize query results.</div>
+</div></section>
+
+<section class="part" id="revision"><h2>Final Revision — Quick Recall</h2>
+<div class="card">
+<h3>One-line definitions</h3>
+<table>
+<tr><th>Topic</th><th>Recall line</th></tr>
+<tr><td>ASP.NET Core</td><td>Cross-platform .NET web framework.</td></tr>
+<tr><td>HTTP</td><td>Protocol for request/response communication.</td></tr>
+<tr><td>REST</td><td>Architectural style centered on resources and uniform interactions.</td></tr>
+<tr><td>Controller</td><td>Class that handles API requests and produces responses.</td></tr>
+<tr><td>Routing</td><td>Matches a request to an endpoint.</td></tr>
+<tr><td>Action Result</td><td>Represents the HTTP response from a controller action.</td></tr>
+<tr><td>Serialization</td><td>C# object → JSON.</td></tr>
+<tr><td>Deserialization</td><td>JSON → C# object.</td></tr>
+<tr><td>Model Binding</td><td>HTTP request data → action parameters/models.</td></tr>
+<tr><td>Middleware</td><td>Component in the request/response pipeline.</td></tr>
+<tr><td>DI</td><td>Provides dependencies from outside a class.</td></tr>
+<tr><td>Configuration</td><td>Settings controlling application behavior.</td></tr>
+<tr><td>Validation</td><td>Checks whether incoming data satisfies rules.</td></tr>
+<tr><td>Exception Handling</td><td>Safely handles unexpected runtime failures.</td></tr>
+<tr><td>Logging</td><td>Records application events/information.</td></tr>
+<tr><td>LINQ</td><td>C# query capabilities for sequences/data sources.</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>Critical comparisons</h3>
+<table>
+<tr><th>Compare</th><th>Remember</th></tr>
+<tr><td>Content-Type vs Accept</td><td>Content-Type = what I send; Accept = what I want back.</td></tr>
+<tr><td>Route vs Query</td><td>Route identifies resource; query filters/customizes collection.</td></tr>
+<tr><td>Routing vs Binding</td><td>Routing chooses endpoint; binding supplies endpoint parameters.</td></tr>
+<tr><td>Serialization vs Binding</td><td>Serialization converts representation; binding is the broader request-to-parameter process.</td></tr>
+<tr><td>Authentication vs Authorization</td><td>Who are you? vs Are you allowed?</td></tr>
+<tr><td>Validation vs Exception</td><td>Invalid input vs unexpected runtime failure.</td></tr>
+<tr><td>Logging vs Debugging</td><td>Record information vs actively investigate.</td></tr>
+<tr><td>IEnumerable vs IQueryable</td><td>Enumerable sequence/in-memory execution vs provider-based query representation.</td></tr>
+<tr><td>First vs Single</td><td>First match vs exactly one match.</td></tr>
+<tr><td>ToList</td><td>Materializes a sequence into a List and executes a deferred query.</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>Master Request Flow</h3>
+<pre><code>Client
+  ↓
+HTTP Request
+  ↓
+Kestrel
+  ↓
+Middleware
+  ↓
+Routing
+  ↓
+Endpoint
+  ↓
+Model Binding
+  ↓
+Model Validation
+  ↓
+Controller Action
+  ↓
+Business/Application Logic
+  ↓
+LINQ / Data Access
+  ↓
+Action Result
+  ↓
+Serialization
+  ↓
+HTTP Response
+  ↓
+Middleware
+  ↓
+Kestrel
+  ↓
+Client</code></pre>
+</div>
+
+<div class="card">
+<h3>Self-check Quiz</h3>
+<details><summary>1. What is the difference between C#, .NET and ASP.NET Core?</summary><div class="answer">C# is the programming language; .NET is the platform/runtime and libraries; ASP.NET Core is the web framework built on .NET.</div></details>
+<details><summary>2. What does Kestrel do?</summary><div class="answer">It is the ASP.NET Core web server that listens for HTTP/HTTPS traffic and passes requests into the ASP.NET Core pipeline.</div></details>
+<details><summary>3. What does [ApiController] provide?</summary><div class="answer">API-specific conventions and behaviors, including binding inference and automatic 400 responses for invalid model state.</div></details>
+<details><summary>4. What is routing?</summary><div class="answer">Matching an incoming HTTP request to an endpoint.</div></details>
+<details><summary>5. What is IActionResult?</summary><div class="answer">An abstraction representing an HTTP result returned by a controller action.</div></details>
+<details><summary>6. What is serialization?</summary><div class="answer">Converting a C# object into JSON or another representation.</div></details>
+<details><summary>7. What is model binding?</summary><div class="answer">Taking data from the HTTP request and supplying it to action parameters/models.</div></details>
+<details><summary>8. What is middleware short-circuiting?</summary><div class="answer">A middleware chooses not to call the next component and completes the response itself.</div></details>
+<details><summary>9. What are the three DI lifetimes?</summary><div class="answer">Transient, Scoped and Singleton.</div></details>
+<details><summary>10. What is configuration precedence?</summary><div class="answer">When multiple providers define the same key, the later provider in the configured precedence order overrides the earlier value.</div></details>
+<details><summary>11. What is the difference between binding and validation?</summary><div class="answer">Binding supplies data to the model/parameters; validation checks whether that data satisfies rules.</div></details>
+<details><summary>12. Why use global exception handling?</summary><div class="answer">To centralize error handling, avoid duplicate code, provide consistent safe responses, and support centralized logging.</div></details>
+<details><summary>13. What is ILogger?</summary><div class="answer">A logging abstraction that lets application code write logs without being tightly coupled to a particular logging destination/provider.</div></details>
+<details><summary>14. What is structured logging?</summary><div class="answer">Logging using message templates and named properties so data remains searchable and structured.</div></details>
+<details><summary>15. What is deferred execution?</summary><div class="answer">The LINQ query is defined but execution is delayed until enumeration or an immediate/result-producing operation occurs.</div></details>
+<details><summary>16. First vs Single?</summary><div class="answer">First returns the first match; Single requires exactly one match.</div></details>
+<details><summary>17. What does Any() answer?</summary><div class="answer">Whether at least one element/match exists.</div></details>
+<details><summary>18. What does ToList() do?</summary><div class="answer">Materializes the sequence into a List and forces execution of a deferred query.</div></details>
+</div>
+
+<div class="card">
+<h3>Hands-on recall checklist</h3>
+<div class="checklist">
+<label><input type="checkbox"> I can explain C# vs .NET vs ASP.NET Core.</label>
+<label><input type="checkbox"> I can explain the HTTP request/response structure.</label>
+<label><input type="checkbox"> I can design RESTful Student endpoints.</label>
+<label><input type="checkbox"> I understand Program.cs, builder, Build and Run.</label>
+<label><input type="checkbox"> I can explain the ASP.NET Core request pipeline.</label>
+<label><input type="checkbox"> I understand controllers and attributes.</label>
+<label><input type="checkbox"> I can distinguish routing from model binding.</label>
+<label><input type="checkbox"> I know common ActionResult/status-code mappings.</label>
+<label><input type="checkbox"> I can explain JSON serialization/deserialization.</label>
+<label><input type="checkbox"> I understand middleware and ordering.</label>
+<label><input type="checkbox"> I understand DI and service lifetimes.</label>
+<label><input type="checkbox"> I understand configuration providers and precedence.</label>
+<label><input type="checkbox"> I can explain validation and ModelState.</label>
+<label><input type="checkbox"> I can explain global exception handling.</label>
+<label><input type="checkbox"> I understand ILogger and log levels.</label>
+<label><input type="checkbox"> I understand deferred LINQ execution.</label>
+<label><input type="checkbox"> I can distinguish First, Single, Any, All and Contains.</label>
+<label><input type="checkbox"> I can explain IEnumerable vs IQueryable.</label>
+</div>
+</div>
+
+<div class="card">
+<h3>Week 2 Final Cheat Code</h3>
+<pre><code>REQUEST
+  ↓
+Kestrel
+  ↓
+Middleware
+  ↓
+Routing
+  ↓
+Binding
+  ↓
+Validation
+  ↓
+Controller
+  ↓
+LINQ / Application Logic
+  ↓
+Action Result
+  ↓
+Serialization
+  ↓
+RESPONSE
+
+Cross-cutting:
+Middleware → exception handling + auth + logging
+DI        → supplies dependencies
+Config    → supplies settings
+Logging   → records what happened
+LINQ      → queries data</code></pre>
+</div>
+</section>
+
+<footer>
+Week 2 ASP.NET Core & Web API Study Guide • Built for learning, revision and exam preparation
+</footer>
+</main>
+</div>
+<script>
+function setTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  localStorage.setItem('week2-theme',theme);
+}
+const saved=localStorage.getItem('week2-theme');
+if(saved) setTheme(saved);
+
+function searchGuide(){
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  document.querySelectorAll('.part').forEach(section=>{
+    if(!q){section.style.display='';return;}
+    section.style.display=section.innerText.toLowerCase().includes(q)?'':'none';
+  });
+}
+</script>
+</body>
+</html>
