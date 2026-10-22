@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Complete Week 3 ASP.NET Core Web API study guide: REST, routing, validation, exception handling, Swagger/OpenAPI, XML documentation, and API versioning.">
+<title>Week 3 — ASP.NET Core Web API Master Study Guide</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--text:#182230;--muted:#5c6878;--line:#dce3ec;--accent:#315ee7;--accent-soft:#eaf0ff;--code:#101827;--code-text:#e6edf7;--good:#147d52;--warn:#9a5b00;--shadow:0 8px 26px rgba(25,40,70,.06)}
+[data-theme="dark"]{--bg:#0c1220;--panel:#141d2d;--text:#edf2fa;--muted:#a7b3c5;--line:#2b394e;--accent:#8aa7ff;--accent-soft:#202d4d;--code:#080d16;--code-text:#e6edf7;--good:#68d6a4;--warn:#ffcb78;--shadow:0 8px 26px rgba(0,0,0,.2)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:88px}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.68 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}a{color:var(--accent)}button,input{font:inherit}.topbar{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;padding:12px max(18px,calc((100% - 1240px)/2));box-shadow:var(--shadow)}.brand{font-weight:800;white-space:nowrap}.topbar input{flex:1;min-width:80px;max-width:470px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);padding:9px 12px}.btn{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--panel);color:var(--text);cursor:pointer}.btn:hover{border-color:var(--accent)}.layout{max-width:1240px;margin:auto;padding:24px 18px;display:grid;grid-template-columns:265px minmax(0,1fr);gap:26px}.sidebar{position:sticky;top:82px;align-self:start;max-height:calc(100vh - 100px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}.sidebar h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.sidebar a{display:block;text-decoration:none;color:var(--muted);padding:6px 9px;border-radius:8px;font-size:14px}.sidebar a:hover{background:var(--accent-soft);color:var(--accent)}main{min-width:0}.hero{background:linear-gradient(135deg,var(--panel),var(--accent-soft));border:1px solid var(--line);border-radius:20px;padding:30px;margin-bottom:22px}.eyebrow{color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-size:12px}.hero h1{font-size:clamp(28px,4vw,44px);line-height:1.15;margin:10px 0}.hero p{color:var(--muted);max-width:780px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.chip{font-size:12px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 10px}.progress-wrap{margin-top:20px}.progress{height:8px;border-radius:99px;background:var(--line);overflow:hidden}.progress>div{height:100%;width:0;background:var(--accent);transition:width .2s}.progress-label{font-size:12px;color:var(--muted);margin-top:5px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;margin:0 0 18px;box-shadow:var(--shadow)}h2{font-size:26px;line-height:1.25;margin:0 0 14px}h3{font-size:19px;line-height:1.35;margin:22px 0 8px}h4{font-size:16px;margin:16px 0 6px}p{margin:8px 0}ul,ol{padding-left:23px}li{margin:4px 0}.muted{color:var(--muted)}.callout{padding:13px 15px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:8px;margin:14px 0}.warning{border-left-color:var(--warn)}.good{border-left-color:var(--good)}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}th{background:var(--accent-soft);font-weight:750}tr:last-child td{border-bottom:0}pre{overflow:auto;background:var(--code);color:var(--code-text);padding:16px;border-radius:12px;font-size:13px;line-height:1.55}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}p code,li code,td code{background:var(--accent-soft);padding:2px 5px;border-radius:5px;font-size:.92em}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.mini{border:1px solid var(--line);border-radius:12px;padding:14px}.mini h4{margin-top:0}.flow{display:flex;flex-direction:column;align-items:stretch;gap:6px;max-width:650px;margin:14px auto}.flow div{border:1px solid var(--line);border-radius:9px;padding:10px;text-align:center;background:var(--bg)}.arrow{text-align:center;color:var(--accent);font-weight:800}.quiz-q{border-top:1px solid var(--line);padding:16px 0}.quiz-q:first-child{border-top:0}.quiz-q label{display:block;padding:5px 0;cursor:pointer}.answer{margin-top:10px}.answer summary{cursor:pointer;color:var(--accent);font-weight:700}.answer .explain{padding:10px 12px;background:var(--bg);border-radius:8px;margin-top:8px}.checkrow{display:flex;align-items:flex-start;gap:10px;margin:9px 0}.checkrow input{margin-top:7px;accent-color:var(--accent)}.footer{text-align:center;color:var(--muted);font-size:13px;padding:20px}.hidden{display:none!important}.tag{display:inline-block;border-radius:6px;background:var(--accent-soft);color:var(--accent);padding:2px 7px;font-size:12px;font-weight:750}.subnav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}.subnav a{font-size:13px;text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:5px 9px}.toplink{float:right;font-size:12px;text-decoration:none}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;max-height:none}.sidebar nav{columns:2}.topbar{flex-wrap:wrap}.brand{flex:1}.topbar input{order:3;max-width:none;flex-basis:100%}.grid2{grid-template-columns:1fr}}@media(max-width:520px){.layout{padding:12px}.card,.hero{padding:18px}.sidebar nav{columns:1}table{display:block;overflow-x:auto;white-space:normal}.topbar{padding:10px 12px}}
+@media print{.topbar,.sidebar,.btn,.progress-wrap,.subnav{display:none!important}.layout{display:block;max-width:none;padding:0}.card,.hero{box-shadow:none;break-inside:avoid}.hidden{display:block!important}body{background:white;color:#111}}
+</style>
+</head>
+<body>
+<header class="topbar" id="top">
+  <div class="brand">.NET Learning · Week 3</div>
+  <input id="search" type="search" placeholder="Search topics, terms, examples…" aria-label="Search study guide">
+  <button class="btn" id="themeBtn" type="button" aria-label="Toggle dark or light theme">🌙 / ☀️ Theme</button>
+  <button class="btn" type="button" onclick="window.print()">Print / Save PDF</button>
+</header>
+<div class="layout">
+<aside class="sidebar">
+  <h3>Contents</h3>
+  <nav id="toc">
+    <a href="#start">How to use this guide</a>
+    <a href="#p1">1. REST & HTTP</a>
+    <a href="#p2">2. API Routing</a>
+    <a href="#p3">3. API Validation</a>
+    <a href="#p4">4. Error Handling</a>
+    <a href="#p5">5. Swagger & OpenAPI</a>
+    <a href="#p6">6. Swagger UI</a>
+    <a href="#p7">7. XML Documentation</a>
+    <a href="#p8">8. XML + Swagger</a>
+    <a href="#p9">9. API Versioning</a>
+    <a href="#p10">10. Student API Plan</a>
+    <a href="#cheatsheet">Revision Cheat Sheet</a>
+    <a href="#quiz">Final Quiz</a>
+    <a href="#glossary">Glossary</a>
+  </nav>
+  <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+  <h3>Study checklist</h3>
+  <div id="checklist">
+    <label class="checkrow"><input type="checkbox"> Part 1 — REST & HTTP</label>
+    <label class="checkrow"><input type="checkbox"> Part 2 — Routing</label>
+    <label class="checkrow"><input type="checkbox"> Part 3 — Validation</label>
+    <label class="checkrow"><input type="checkbox"> Part 4 — Exceptions</label>
+    <label class="checkrow"><input type="checkbox"> Part 5 — OpenAPI</label>
+    <label class="checkrow"><input type="checkbox"> Part 6 — Swagger UI</label>
+    <label class="checkrow"><input type="checkbox"> Part 7 — XML docs</label>
+    <label class="checkrow"><input type="checkbox"> Part 8 — XML + Swagger</label>
+    <label class="checkrow"><input type="checkbox"> Part 9 — Versioning</label>
+    <label class="checkrow"><input type="checkbox"> Part 10 — Review plan</label>
+  </div>
+</aside>
+<main>
+<section class="hero" id="start">
+  <div class="eyebrow">Complete theory and exam-prep guide</div>
+  <h1>Week 3 — ASP.NET Core Web API Master Study Guide</h1>
+  <p>Learn how to build well-structured, validated, documented and maintainable REST APIs. This guide covers every topic and subtopic in your Week 3 outline, using the <strong>Student Management System</strong> as the project context.</p>
+  <div class="chips"><span class="chip">Beginner-friendly</span><span class="chip">Theory first</span><span class="chip">Interview prep</span><span class="chip">Interactive quizzes</span><span class="chip">Dark / light theme</span><span class="chip">VS Code workflow later</span></div>
+  <div class="callout"><strong>Learning agreement:</strong> This page is theory and revision only. We will implement the concepts in the Student Management application after finishing the theory. We will not switch to a Patient Management System or introduce a separate service layer.</div>
+  <div class="progress-wrap"><div class="progress"><div id="progressBar"></div></div><div class="progress-label" id="progressLabel">0 of 10 parts marked complete</div></div>
+  <div class="subnav"><a href="#p1">Start Part 1</a><a href="#p10">Implementation plan</a><a href="#quiz">Test yourself</a></div>
+</section>
+
+<section class="card searchable" id="p1">
+<h2>Part 1 — REST API & HTTP Concepts</h2>
+<p><span class="tag">Core fundamentals</span> REST is an architectural style for networked applications. HTTP is the protocol commonly used to communicate with REST APIs. ASP.NET Core is the framework used to build the API.</p>
+<h3>1.1 REST architecture</h3>
+<p>A client sends an HTTP request to a resource-oriented endpoint. The API processes it and returns an HTTP response, often containing a JSON representation of the resource.</p>
+<div class="flow"><div>Client application (browser / frontend)</div><div class="arrow">↓ HTTP request</div><div>ASP.NET Core API → routing → controller/action</div><div class="arrow">↓ process request</div><div>HTTP response: status code + headers + optional body</div></div>
+<h3>1.2 REST architectural constraints</h3>
+<table><tr><th>Constraint</th><th>Meaning</th><th>Why it matters</th></tr>
+<tr><td>Client–Server</td><td>Client interface and server data/processing concerns are separated.</td><td>They can evolve independently if the API contract remains compatible.</td></tr>
+<tr><td>Statelessness</td><td>Each request carries the information needed to process it; the server does not depend on conversational state retained from earlier requests.</td><td>Improves scalability and makes requests easier to route across server instances.</td></tr>
+<tr><td>Cacheability</td><td>Responses identify whether and how they may be cached.</td><td>Can reduce latency and repeated work.</td></tr>
+<tr><td>Uniform Interface</td><td>Resources are identified consistently; representations and self-descriptive messages are used, with hypermedia as a REST constraint.</td><td>Creates a predictable interface.</td></tr>
+<tr><td>Layered System</td><td>Requests may pass through gateways, proxies, load balancers or middleware.</td><td>Supports separation of responsibilities and infrastructure scaling.</td></tr>
+<tr><td>Code on Demand (optional)</td><td>A server may send executable code, such as JavaScript, to a client.</td><td>Extends client behavior; this constraint is optional.</td></tr></table>
+<div class="callout"><strong>Exam trap:</strong> Stateless does not mean the API cannot use a database, cache data or authenticate users. It means the server does not rely on stored conversational context from a prior request to understand the current request.</div>
+<h3>1.3 Resources, endpoints and representations</h3>
+<ul><li><strong>Resource:</strong> The conceptual item being managed, such as a student.</li><li><strong>Resource identifier:</strong> A URI identifying a resource, for example <code>/api/students/5</code>.</li><li><strong>Endpoint:</strong> Commonly, a route plus an HTTP method that exposes an operation.</li><li><strong>Representation:</strong> A transferable form of resource data, often JSON or XML.</li></ul>
+<table><tr><th>Example</th><th>Meaning</th></tr><tr><td><code>GET /api/students</code></td><td>Retrieve the collection.</td></tr><tr><td><code>GET /api/students/5</code></td><td>Retrieve one student.</td></tr><tr><td><code>application/json</code></td><td>Media type of a JSON representation.</td></tr></table>
+<h3>1.4 RESTful API design principles</h3>
+<ul><li>Use resource-oriented nouns in URLs: <code>/api/students</code>, not command-heavy names such as <code>/api/getStudents</code>.</li><li>Use HTTP methods according to their semantics.</li><li>Return meaningful status codes and consistent response structures.</li><li>Use appropriate headers and media types.</li><li>Support filtering, sorting and pagination for large collections when required.</li><li>Consider compatibility before changing public request or response contracts.</li><li>Do not expose internal database or implementation details unnecessarily.</li></ul>
+<h3>1.5 HATEOAS</h3>
+<p><strong>HATEOAS</strong> means <em>Hypermedia as the Engine of Application State</em>. A response can contain links that tell clients which related resources or transitions are available.</p>
+<pre><code>{
+  "id": 5,
+  "name": "Harshitha",
+  "_links": {
+    "self": "/api/students/5",
+    "collection": "/api/students"
+  }
+}</code></pre>
+<p>Links can help clients navigate without hardcoding every related URI. A links object alone is not necessarily a complete HATEOAS implementation; links should represent meaningful navigation or actions. HATEOAS is part of REST's uniform-interface constraint, although many practical APIs do not fully implement it.</p>
+<h3>1.6 HTTP requests and responses</h3>
+<p>A request includes a method, target/URL, headers and possibly a body. A response includes a status code, headers and possibly a body.</p>
+<pre><code>POST /api/students HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Harshitha",
+  "age": 22,
+  "grade": "A"
+}</code></pre>
+<pre><code>HTTP/1.1 201 Created
+Content-Type: application/json
+Location: /api/students/5
+
+{
+  "id": 5,
+  "name": "Harshitha",
+  "age": 22,
+  "grade": "A"
+}</code></pre>
+<h3>1.7 HTTP methods</h3>
+<table><tr><th>Method</th><th>Typical purpose</th><th>Important note</th></tr>
+<tr><td>GET</td><td>Retrieve a representation.</td><td>Safe and idempotent by definition of intended semantics.</td></tr>
+<tr><td>POST</td><td>Submit data for processing; often create a resource.</td><td>Not generally idempotent.</td></tr>
+<tr><td>PUT</td><td>Create or replace the target resource's state, depending on API semantics.</td><td>Idempotent; not safe.</td></tr>
+<tr><td>PATCH</td><td>Apply a partial modification.</td><td>May or may not be idempotent depending on the patch operation.</td></tr>
+<tr><td>DELETE</td><td>Request removal of a resource.</td><td>Idempotent in intended effect, even if repeated response codes differ.</td></tr></table>
+<h3>1.8 HTTP headers, request body, Content-Type and MIME types</h3>
+<table><tr><th>Term / header</th><th>Meaning</th></tr><tr><td><code>Content-Type</code></td><td>Media type of the message body being sent.</td></tr><tr><td><code>Accept</code></td><td>Response media types the client can accept.</td></tr><tr><td><code>Authorization</code></td><td>Credentials or authorization token information.</td></tr><tr><td><code>Cache-Control</code></td><td>Caching directives.</td></tr><tr><td>Request body</td><td>Data submitted with the request, for example a student JSON object.</td></tr></table>
+<table><tr><th>Media type (MIME type)</th><th>Common content</th></tr><tr><td><code>application/json</code></td><td>JSON data</td></tr><tr><td><code>application/xml</code></td><td>XML data</td></tr><tr><td><code>text/plain</code></td><td>Plain text</td></tr><tr><td><code>text/html</code></td><td>HTML</td></tr><tr><td><code>application/pdf</code></td><td>PDF documents</td></tr><tr><td><code>multipart/form-data</code></td><td>Form fields and possibly file uploads</td></tr></table>
+<p>ASP.NET Core input formatters deserialize supported request formats into .NET objects. Content negotiation helps choose an appropriate response representation. It is distinct from model validation.</p>
+<h3>1.9 HTTP status codes</h3>
+<table><tr><th>Range</th><th>Class</th><th>Examples</th></tr><tr><td>100–199</td><td>Informational</td><td>Request processing information.</td></tr><tr><td>200–299</td><td>Success</td><td><code>200 OK</code>, <code>201 Created</code>, <code>204 No Content</code>.</td></tr><tr><td>300–399</td><td>Redirection</td><td>Further action or redirection.</td></tr><tr><td>400–499</td><td>Client/request error</td><td><code>400 Bad Request</code>, <code>401 Unauthorized</code>, <code>403 Forbidden</code>, <code>404 Not Found</code>, <code>405 Method Not Allowed</code>, <code>409 Conflict</code>.</td></tr><tr><td>500–599</td><td>Server error</td><td><code>500 Internal Server Error</code>.</td></tr></table>
+<h3>1.10 Safe vs idempotent methods</h3>
+<table><tr><th>Method</th><th>Safe?</th><th>Idempotent?</th></tr><tr><td>GET</td><td>Yes</td><td>Yes</td></tr><tr><td>POST</td><td>No</td><td>Generally no</td></tr><tr><td>PUT</td><td>No</td><td>Yes</td></tr><tr><td>PATCH</td><td>No</td><td>Depends on the operation</td></tr><tr><td>DELETE</td><td>No</td><td>Yes</td></tr></table>
+<p><strong>Safe</strong> means the requested operation is intended to be read-only. <strong>Idempotent</strong> means repeating the same request has the same intended effect on server state as making it once. DELETE may return 204 the first time and 404 the second time while remaining idempotent.</p>
+<h3>1.11 HTTPS</h3>
+<p>HTTPS is HTTP protected by TLS. TLS provides confidentiality, integrity and server authentication through certificate validation. HTTPS does not replace application authentication, authorization, validation or secure design.</p>
+<details class="answer"><summary>Part 1 — quick self-check</summary><div class="explain">Can you explain REST constraints, distinguish a resource from an endpoint, describe Content-Type vs Accept, list status code classes, and explain why DELETE can be idempotent but not safe?</div></details>
+</section>
+
+<section class="card searchable" id="p2">
+<h2>Part 2 — API Routing</h2>
+<p>Routing matches an incoming HTTP request to an endpoint. In controller-based ASP.NET Core APIs, routes and HTTP method attributes help determine which controller action can handle the request.</p>
+<h3>2.1 Routing and route templates</h3>
+<p>A route template is a pattern used to match a URL path. For example, <code>api/students/{id}</code> contains a route parameter named <code>id</code>.</p>
+<h3>2.2 Attribute routing: [Route] and [controller]</h3>
+<pre><code>[ApiController]
+[Route("api/[controller]")]
+public class StudentsController : ControllerBase
+{
+    [HttpGet("{id}")]
+    public IActionResult GetStudent(int id) { ... }
+}</code></pre>
+<p><code>[Route]</code> defines a route template. The <code>[controller]</code> token is replaced with the controller name without the <code>Controller</code> suffix; <code>StudentsController</code> therefore maps to <code>students</code>. The example action matches a GET request such as <code>/api/students/5</code>.</p>
+<h3>2.3 Route parameters vs query parameters</h3>
+<table><tr><th>Type</th><th>Example</th><th>Common use</th></tr><tr><td>Route parameter</td><td><code>/api/students/5</code></td><td>Identify a particular resource.</td></tr><tr><td>Query parameter</td><td><code>/api/students?grade=A</code></td><td>Filter, sort, search or paginate a collection.</td></tr></table>
+<p>Route constraints can restrict matches, for example <code>{id:int}</code>. A route constraint helps select a route; it is not a substitute for business validation.</p>
+<h3>2.4 Endpoint routing and endpoint registration</h3>
+<ul><li><code>builder.Services.AddControllers()</code> registers controller-related services.</li><li><code>app.MapControllers()</code> maps attribute-routed controller endpoints.</li><li>These are different operations: registering services does not itself map the endpoints.</li><li>Endpoint routing matches a request to a registered endpoint based on route and other metadata, including HTTP method.</li></ul>
+<h3>2.5 Controller and action selection</h3>
+<p>Controller discovery makes controller types available to the MVC framework. Routing and endpoint metadata determine which action can handle a request. Action selection considers the route, HTTP method and applicable constraints/metadata.</p>
+<table><tr><th>Attribute</th><th>Purpose</th></tr><tr><td><code>[HttpGet]</code></td><td>Maps GET requests.</td></tr><tr><td><code>[HttpPost]</code></td><td>Maps POST requests.</td></tr><tr><td><code>[HttpPut]</code></td><td>Maps PUT requests.</td></tr><tr><td><code>[HttpPatch]</code></td><td>Maps PATCH requests.</td></tr><tr><td><code>[HttpDelete]</code></td><td>Maps DELETE requests.</td></tr></table>
+<h3>2.6 Routing flow</h3>
+<div class="flow"><div>Incoming HTTP request</div><div class="arrow">↓</div><div>Endpoint matching: route + method + metadata</div><div class="arrow">↓</div><div>Controller and action selection</div><div class="arrow">↓</div><div>Action method execution</div><div class="arrow">↓</div><div>HTTP response</div></div>
+<div class="callout"><strong>Status-code distinction:</strong> No matching route commonly results in 404. If a resource path exists but the HTTP method is unsupported, the response commonly is 405. Exact behavior can depend on routing and endpoint configuration.</div>
+<h3>2.7 Routing interview points</h3>
+<ul><li>Attribute routing places route definitions on controllers/actions.</li><li>The same route path can support different HTTP methods.</li><li>Route values are commonly bound from the path; query values are commonly bound from the query string.</li><li>Endpoint registration and service registration are separate steps.</li><li>Routing identifies an endpoint; model binding and validation then process the action inputs.</li></ul>
+</section>
+
+<section class="card searchable" id="p3">
+<h2>Part 3 — API Validation</h2>
+<h3>3.1 Validation fundamentals and why validation is required</h3>
+<p>Validation checks whether incoming data meets structural, data and application rules. It prevents invalid data from being processed or stored and gives clients actionable feedback.</p>
+<h3>3.2 Client-side vs server-side validation</h3>
+<table><tr><th>Client-side</th><th>Server-side</th></tr><tr><td>Runs in the frontend; improves usability and gives quick feedback.</td><td>Runs in the API; is essential because clients can bypass frontend checks.</td></tr><tr><td>Not a security boundary.</td><td>Must enforce important data and business rules.</td></tr></table>
+<h3>3.3 Data, model and business validation</h3>
+<ul><li><strong>Data validation:</strong> Checks values, format, lengths and ranges.</li><li><strong>Model validation:</strong> Checks a bound model against configured validation rules.</li><li><strong>Business validation:</strong> Checks whether an operation is allowed under application rules, such as whether a unique student identifier already exists.</li></ul>
+<p>A request can pass model validation and still fail a business rule.</p>
+<h3>3.4 ASP.NET Core validation pipeline</h3>
+<div class="flow"><div>Incoming HTTP request</div><div class="arrow">↓</div><div>Request-body deserialization and model binding</div><div class="arrow">↓</div><div>Model validation and ModelState errors</div><div class="arrow">↓</div><div>With [ApiController]: automatic 400 for invalid model state by default</div><div class="arrow">↓</div><div>Action runs if validation passes</div></div>
+<p>Without automatic API-controller behavior, an action commonly checks <code>ModelState.IsValid</code> explicitly. The exact behavior can be customized.</p>
+<h3>3.5 Data Annotation validation attributes</h3>
+<table><tr><th>Attribute</th><th>Purpose / example</th><th>Important note</th></tr><tr><td><code>[Required]</code></td><td>Requires a value.</td><td>Behavior depends on the property's type; non-nullable value types already have a default value unless additional rules are used.</td></tr><tr><td><code>[Range(1, 120)]</code></td><td>Restricts a numeric value to a range.</td><td>It does not check every business rule.</td></tr><tr><td><code>[StringLength(100)]</code></td><td>Sets a string length limit.</td><td>Can specify a minimum and maximum length.</td></tr><tr><td><code>[MinLength(3)]</code></td><td>Requires a minimum length.</td><td>Does not alone make a value required.</td></tr><tr><td><code>[MaxLength(50)]</code></td><td>Sets a maximum length.</td><td>Useful for strings and collections.</td></tr><tr><td><code>[RegularExpression("...")]</code></td><td>Checks a value against a pattern.</td><td>Pattern must match the intended format.</td></tr></table>
+<h3>3.6 Automatic validation with [ApiController]</h3>
+<p><code>[ApiController]</code> enables API-specific behaviors including automatic HTTP 400 responses when model validation fails, binding-source inference and a requirement for attribute routing. Automatic invalid-model responses commonly use <code>ValidationProblemDetails</code>, which can contain field-level errors.</p>
+<h3>3.7 Invalid requests and appropriate validation responses</h3>
+<table><tr><th>Scenario</th><th>Typical response</th></tr><tr><td>Required name missing or age outside allowed range</td><td><code>400 Bad Request</code></td></tr><tr><td>Business rule violation</td><td>Often 400 or 409, depending on the rule and API contract.</td></tr><tr><td>Student ID does not exist</td><td><code>404 Not Found</code></td></tr><tr><td>Unexpected server failure</td><td><code>500 Internal Server Error</code></td></tr></table>
+<p>Validation responses should be consistent and useful, but should not disclose sensitive internal details.</p>
+<h3>3.8 Validation interview points</h3>
+<ul><li><code>ModelState.IsValid</code> indicates whether model binding and validation have reported errors in model state.</li><li><code>[ApiController]</code> usually rejects invalid model state before the action runs.</li><li>Client-side validation is not a replacement for server-side validation.</li><li>Data annotations do not replace database constraints or application-specific business checks.</li></ul>
+</section>
+
+<section class="card searchable" id="p4">
+<h2>Part 4 — API Error Responses & Exception Handling</h2>
+<h3>4.1 Error handling and its purpose</h3>
+<p>Error handling detects, manages and communicates failures. Centralized exception handling reduces duplicated try/catch logic, standardizes error responses, supports logging and avoids exposing internal details.</p>
+<h3>4.2 HTTP errors: 400, 404 and 500</h3>
+<table><tr><th>Status</th><th>Meaning</th><th>Example</th></tr><tr><td><code>400 Bad Request</code></td><td>The request is invalid.</td><td>Model validation fails.</td></tr><tr><td><code>404 Not Found</code></td><td>The requested resource or endpoint cannot be found.</td><td>Student ID does not exist.</td></tr><tr><td><code>500 Internal Server Error</code></td><td>An unexpected server failure occurred.</td><td>An unhandled exception.</td></tr></table>
+<p>An error response is an HTTP result; an exception is an exceptional condition represented in application code. A missing student can be handled normally without throwing an exception.</p>
+<h3>4.3 Consistent error responses and ProblemDetails</h3>
+<p>ASP.NET Core supports the <code>ProblemDetails</code> format for HTTP API errors and <code>ValidationProblemDetails</code> for validation errors.</p>
+<pre><code>{
+  "type": "https://example.com/errors/invalid-request",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "The submitted student data is invalid."
+}</code></pre>
+<ul><li><code>type</code>: identifier for the problem type.</li><li><code>title</code>: short summary.</li><li><code>status</code>: HTTP status code.</li><li><code>detail</code>: occurrence-specific explanation.</li></ul>
+<p>Additional fields such as a trace identifier may be included. Never expose stack traces, secrets, credentials or internal file paths in production responses.</p>
+<h3>4.4 Global exception handling and centralized processing</h3>
+<p>Global exception handling catches otherwise unhandled exceptions from downstream parts of the HTTP request pipeline and turns them into a controlled response where possible.</p>
+<div class="flow"><div>Request enters pipeline</div><div class="arrow">↓</div><div>Downstream code throws an exception</div><div class="arrow">↓</div><div>Exception-handling middleware invokes registered handler</div><div class="arrow">↓</div><div>Log exception and map to suitable response</div><div class="arrow">↓</div><div>Client receives consistent error response</div></div>
+<h3>4.5 IExceptionHandler</h3>
+<p><code>IExceptionHandler</code> is a framework interface for implementing exception-handling logic in modern ASP.NET Core, including .NET 8 and later. It defines <code>TryHandleAsync(HttpContext, Exception, CancellationToken)</code>.</p>
+<ul><li>Inspect the exception and HTTP context.</li><li>Log appropriate details.</li><li>Choose a suitable response status and body.</li><li>Return <code>true</code> if the exception was handled, or <code>false</code> if this handler did not handle it.</li></ul>
+<h3>4.6 Registering and integrating the handler</h3>
+<table><tr><th>Configuration</th><th>Responsibility</th></tr><tr><td><code>builder.Services.AddExceptionHandler&lt;THandler&gt;()</code></td><td>Registers the handler type with dependency injection.</td></tr><tr><td><code>app.UseExceptionHandler()</code></td><td>Adds exception-handling middleware to the HTTP pipeline.</td></tr></table>
+<p>Registering the handler alone does not enable global handling; the middleware must be configured. Place it early enough to catch exceptions from downstream middleware and endpoint execution. A response that has already started may not be replaceable.</p>
+<h3>4.7 Mapping exceptions to HTTP responses</h3>
+<table><tr><th>Known condition</th><th>Possible mapping</th></tr><tr><td>Known student-not-found exception</td><td>404 Not Found</td></tr><tr><td>Business-rule conflict</td><td>409 Conflict</td></tr><tr><td>Unexpected exception</td><td>500 Internal Server Error</td></tr></table>
+<p>Do not map every exception to 400. The response should reflect whether the issue is a client error, known domain condition or unexpected server failure.</p>
+<h3>4.8 Custom exception middleware vs IExceptionHandler</h3>
+<table><tr><th>Custom middleware</th><th>IExceptionHandler approach</th></tr><tr><td>You implement and maintain the middleware's exception-handling logic.</td><td>You implement the framework handler interface and use ASP.NET Core's exception middleware.</td></tr><tr><td>Must be registered in the pipeline.</td><td>Handler is registered with <code>AddExceptionHandler</code>; middleware is enabled with <code>UseExceptionHandler</code>.</td></tr><tr><td>Can centralize exceptions.</td><td>Also centralizes exception processing while using a framework abstraction.</td></tr></table>
+<p><code>IExceptionHandler</code> is not middleware by itself; it is a handler abstraction used by exception-handling middleware.</p>
+<h3>4.9 Consistent exception handling checklist</h3>
+<ul><li>Return an appropriate status code and consistent error format.</li><li>Log enough detail for diagnosis without leaking sensitive information to clients.</li><li>Include a trace identifier when useful.</li><li>Do not silently ignore exceptions.</li><li>Avoid attempting to write multiple responses for the same request.</li><li>Distinguish expected results (such as not found) from unexpected exceptions.</li></ul>
+<h3>4.10 Student Management System application goals</h3>
+<p>Later, in the Student Management System, we will replace the custom global exception middleware approach with an <code>IExceptionHandler</code> implementation, register it, integrate exception-handling middleware, map relevant exceptions to responses, and test the behavior. This is a future hands-on checklist, not a change made by this HTML page.</p>
+</section>
+
+<section class="card searchable" id="p5">
+<h2>Part 5 — Swagger & OpenAPI</h2>
+<h3>5.1 OpenAPI fundamentals and specification</h3>
+<p><strong>OpenAPI</strong> is a specification for describing HTTP APIs in a standardized, machine-readable document. It explains the API contract without requiring consumers to read implementation code.</p>
+<ul><li>Documents paths, HTTP operations, parameters, request bodies and responses.</li><li>Describes schemas and reusable components.</li><li>Supports documentation tools, testing, and client-code generation.</li><li>An OpenAPI document can be represented as JSON or YAML.</li></ul>
+<h3>5.2 Swagger vs OpenAPI</h3>
+<table><tr><th>OpenAPI</th><th>Swagger</th></tr><tr><td>The specification/standard describing the API.</td><td>A family of tools for working with API descriptions.</td></tr><tr><td>Defines document structure and meaning.</td><td>Tools can generate, edit, display or interact with API documentation.</td></tr></table>
+<h3>5.3 Swagger ecosystem and architecture</h3>
+<table><tr><th>Component</th><th>Role</th></tr><tr><td>Swagger / OpenAPI Generator</td><td>Produces an OpenAPI document from discovered API descriptions and metadata; exact generator depends on packages.</td></tr><tr><td>Swagger UI</td><td>Renders the document as interactive web documentation.</td></tr><tr><td>API Explorer</td><td>Exposes descriptions of discovered API actions and endpoints for tooling.</td></tr><tr><td>Reflection</td><td>Lets .NET tooling inspect types, methods, properties and attributes.</td></tr><tr><td>OpenAPI JSON</td><td>Machine-readable description consumed by UI and other tools.</td></tr></table>
+<h3>5.4 API discovery: controller and action discovery</h3>
+<p>Documentation tooling discovers API endpoints and their metadata, including controller actions, route templates, HTTP methods, parameters, request-body types, response types, status codes and schema information.</p>
+<h3>5.5 API Explorer</h3>
+<p>API Explorer exposes descriptions of discovered actions and endpoints. It helps documentation tooling understand routes, methods, parameters and response metadata. It does not itself render Swagger UI or necessarily generate the final OpenAPI document.</p>
+<h3>5.6 Reflection and metadata</h3>
+<p>Reflection allows .NET code to inspect types, methods, properties and attributes at runtime. API tooling can use reflection along with endpoint metadata and API Explorer descriptions to understand an action's route, HTTP method and model types.</p>
+<h3>5.7 Complete OpenAPI generation flow</h3>
+<div class="flow"><div>Controllers</div><div class="arrow">↓</div><div>Action methods and endpoint metadata</div><div class="arrow">↓</div><div>API Explorer descriptions</div><div class="arrow">↓</div><div>Metadata / reflection</div><div class="arrow">↓</div><div>Swagger / OpenAPI generator</div><div class="arrow">↓</div><div>OpenAPI document</div><div class="arrow">↓</div><div>OpenAPI JSON endpoint</div></div>
+<p>Exact internals differ by ASP.NET Core version and documentation packages. The important idea is that the generator builds a standardized description from API metadata.</p>
+<h3>5.8 OpenAPI JSON and /openapi/v1.json</h3>
+<p>A configured ASP.NET Core OpenAPI endpoint may expose a document at <code>/openapi/v1.json</code>. This path is not universal; it depends on application configuration.</p>
+<table><tr><th>OpenAPI field</th><th>What it describes</th></tr><tr><td><code>paths</code></td><td>API paths and operations.</td></tr><tr><td><code>parameters</code></td><td>Route, query, header or other parameters.</td></tr><tr><td><code>requestBody</code></td><td>Expected request body and media types.</td></tr><tr><td><code>responses</code></td><td>Possible HTTP responses and schemas.</td></tr><tr><td><code>components/schemas</code></td><td>Reusable data schemas.</td></tr></table>
+<h3>5.9 Generator vs UI</h3>
+<ul><li>The generator produces the OpenAPI document.</li><li>The JSON endpoint serves the document.</li><li>Swagger UI loads the document and displays it interactively.</li><li>Swagger UI does not directly call controller methods; when testing, it sends HTTP requests through the normal API pipeline.</li></ul>
+</section>
+
+<section class="card searchable" id="p6">
+<h2>Part 6 — Swagger UI</h2>
+<h3>6.1 Fundamentals and purpose</h3>
+<p>Swagger UI is a browser-based interface that displays an OpenAPI document and lets developers explore endpoints and send test requests.</p>
+<h3>6.2 Reading documentation and viewing endpoints</h3>
+<p>Each operation usually shows its HTTP method, path, description, parameters, request-body schema and documented responses. The actual list depends on the generated document and application configuration.</p>
+<h3>6.3 Parameters and request bodies</h3>
+<table><tr><th>Input</th><th>Example</th><th>Purpose</th></tr><tr><td>Path parameter</td><td><code>/api/students/5</code></td><td>Identifies a resource.</td></tr><tr><td>Query parameter</td><td><code>?grade=A</code></td><td>Filters or changes the query.</td></tr><tr><td>Header</td><td>Authorization token</td><td>Supplies request metadata or credentials.</td></tr><tr><td>Request body</td><td>JSON student data</td><td>Submits structured content.</td></tr></table>
+<p>A schema describes property names, types, constraints and sometimes required fields. Displayed schema details depend on API metadata and OpenAPI generator support.</p>
+<h3>6.4 Executing an API through Swagger UI</h3>
+<ol><li>Select an endpoint.</li><li>Choose <strong>Try it out</strong> when available.</li><li>Enter path/query parameters, headers or request body.</li><li>Select <strong>Execute</strong>.</li><li>Inspect the response status, body, headers and request details.</li></ol>
+<div class="callout warning"><strong>Careful:</strong> Swagger UI sends real HTTP requests. POST, PUT, PATCH and DELETE operations may change data. Use test data and understand the environment before executing them.</div>
+<h3>6.5 Understanding responses and status codes</h3>
+<table><tr><th>Code</th><th>Meaning</th></tr><tr><td>200</td><td>Success with a response representation in common scenarios.</td></tr><tr><td>201</td><td>Resource created.</td></tr><tr><td>204</td><td>Success without a response body.</td></tr><tr><td>400</td><td>Invalid request.</td></tr><tr><td>404</td><td>Resource or endpoint not found.</td></tr><tr><td>500</td><td>Unexpected server error.</td></tr></table>
+<h3>6.6 Swagger request flow</h3>
+<div class="flow"><div>Swagger UI loads the OpenAPI document</div><div class="arrow">↓ user executes operation</div><div>Swagger UI sends HTTP request</div><div class="arrow">↓</div><div>ASP.NET Core API → routing → controller → action</div><div class="arrow">↓</div><div>HTTP response returns to Swagger UI</div><div class="arrow">↓</div><div>UI displays status, headers and body</div></div>
+<h3>6.7 Swagger UI vs OpenAPI JSON</h3>
+<p>OpenAPI JSON is the machine-readable API description; Swagger UI is the human-friendly interface that renders it and can issue requests. Swagger UI does not replace server-side validation, authentication or authorization.</p>
+</section>
+
+<section class="card searchable" id="p7">
+<h2>Part 7 — XML Documentation</h2>
+<h3>7.1 XML documentation comments and ///</h3>
+<p>C# XML documentation comments start with <code>///</code> immediately above the code element they describe. Ordinary comments such as <code>//</code> are not emitted as XML documentation.</p>
+<pre><code>/// &lt;summary&gt;
+/// Represents a student in the system.
+/// &lt;/summary&gt;
+public class Student
+{
+    /// &lt;summary&gt;
+    /// Gets or sets the student's identifier.
+/// &lt;/summary&gt;
+    public int Id { get; set; }
+}</code></pre>
+<h3>7.2 Required and useful XML tags</h3>
+<table><tr><th>Tag</th><th>Purpose</th></tr><tr><td><code>&lt;summary&gt;</code></td><td>Brief description of a type or member.</td></tr><tr><td><code>&lt;param name="..."&gt;</code></td><td>Describes a method parameter.</td></tr><tr><td><code>&lt;returns&gt;</code></td><td>Describes a method's return value; not needed for void methods.</td></tr><tr><td><code>&lt;exception cref="..."&gt;</code></td><td>Documents an exception and when it may occur.</td></tr><tr><td><code>&lt;remarks&gt;</code></td><td>Additional details.</td></tr><tr><td><code>&lt;example&gt;</code></td><td>Example usage.</td></tr><tr><td><code>&lt;see cref="..."&gt;</code></td><td>Reference to another code element.</td></tr><tr><td><code>&lt;typeparam name="..."&gt;</code></td><td>Documents a generic type parameter.</td></tr><tr><td><code>&lt;value&gt;</code></td><td>Describes a property's value.</td></tr></table>
+<h3>7.3 Documenting classes and methods</h3>
+<p>Use <code>&lt;summary&gt;</code> to describe the responsibility of a class or the purpose of a method. Keep the comment accurate and focused on what the code actually does.</p>
+<h3>7.4 Parameters, return values and exceptions</h3>
+<pre><code>/// &lt;summary&gt;
+/// Divides two numbers.
+/// &lt;/summary&gt;
+/// &lt;param name="a"&gt;The numerator.&lt;/param&gt;
+/// &lt;param name="b"&gt;The denominator.&lt;/param&gt;
+/// &lt;returns&gt;The division result.&lt;/returns&gt;
+/// &lt;exception cref="DivideByZeroException"&gt;
+/// Thrown when the denominator is zero.
+/// &lt;/exception&gt;
+public double Divide(double a, double b)
+{
+    return a / b;
+}</code></pre>
+<p>Documentation describes possible behavior; it does not itself enforce validation or guarantee that an exception is thrown in every runtime context.</p>
+<h3>7.5 Documenting models and properties</h3>
+<p>Document model classes and public properties so developers understand the purpose and meaning of each field. The <code>&lt;summary&gt;</code> tag is common for both classes and properties; <code>&lt;value&gt;</code> can describe a property's value specifically.</p>
+<h3>7.6 Documenting enums and enum members</h3>
+<pre><code>/// &lt;summary&gt;
+/// Represents a student's enrollment status.
+/// &lt;/summary&gt;
+public enum StudentStatus
+{
+    /// &lt;summary&gt;The student is enrolled.&lt;/summary&gt;
+    Active,
+    /// &lt;summary&gt;The student is not enrolled.&lt;/summary&gt;
+    Inactive
+}</code></pre>
+<h3>7.7 Common XML documentation mistakes</h3>
+<ul><li>Using <code>//</code> instead of <code>///</code>.</li><li>Leaving out a method's parameter descriptions.</li><li>Using <code>&lt;returns&gt;</code> for a void method.</li><li>Writing comments that no longer match the implementation.</li><li>Assuming comments automatically appear in Swagger without generating and integrating the XML file.</li><li>Documenting exceptions inaccurately.</li></ul>
+</section>
+
+<section class="card searchable" id="p8">
+<h2>Part 8 — XML Documentation with Swagger</h2>
+<h3>8.1 Enabling XML documentation generation</h3>
+<p>The project file (<code>.csproj</code>) can enable XML documentation generation using the <code>GenerateDocumentationFile</code> property.</p>
+<pre><code>&lt;PropertyGroup&gt;
+  &lt;GenerateDocumentationFile&gt;true&lt;/GenerateDocumentationFile&gt;
+&lt;/PropertyGroup&gt;</code></pre>
+<p>During compilation, the compiler emits an XML file containing eligible documentation comments, commonly alongside the compiled assembly in the build output directory.</p>
+<h3>8.2 Generated XML file vs OpenAPI JSON</h3>
+<table><tr><th>XML documentation file</th><th>OpenAPI JSON</th></tr><tr><td>Contains comments about code elements.</td><td>Describes the API contract: paths, operations, parameters, schemas and responses.</td></tr><tr><td>Generated by compiler documentation settings.</td><td>Generated by API documentation tooling.</td></tr><tr><td>Supplies descriptions to a configured generator.</td><td>Is consumed by Swagger UI and other OpenAPI tools.</td></tr></table>
+<h3>8.3 Connecting XML documentation with Swagger</h3>
+<p>The OpenAPI generator must be configured to read the generated XML file. The exact configuration depends on the tooling and ASP.NET Core version. Swashbuckle-based projects commonly configure the Swagger generator to include the XML comments file. Other OpenAPI setups may need a different integration or extension.</p>
+<div class="flow"><div>C# code with /// comments</div><div class="arrow">↓ compile</div><div>Generated XML documentation file</div><div class="arrow">↓ configured generator reads it</div><div>OpenAPI document includes supported descriptions</div><div class="arrow">↓</div><div>Swagger UI displays descriptions</div></div>
+<h3>8.4 What can appear in Swagger UI?</h3>
+<table><tr><th>XML comment</th><th>Possible display</th></tr><tr><td>Controller/class summary</td><td>Tag/controller description, depending on tooling.</td></tr><tr><td>Action summary</td><td>Operation description.</td></tr><tr><td>Parameter comment</td><td>Parameter description.</td></tr><tr><td>Model property summary</td><td>Schema property description.</td></tr><tr><td>Returns and response metadata</td><td>Operation/response description where supported and configured.</td></tr><tr><td>Enum member comments</td><td>Enum value descriptions where supported.</td></tr></table>
+<p>XML comments do not automatically define all HTTP response codes or response schemas; attributes, return types and explicit OpenAPI metadata may also be needed.</p>
+<h3>8.5 Student Management System practical plan</h3>
+<ol><li>Add XML comments to the student model, controller and action methods.</li><li>Enable XML file generation in the project file.</li><li>Build and confirm the XML file exists.</li><li>Configure the existing OpenAPI/Swagger tooling to read it.</li><li>Run the API and open Swagger UI.</li><li>Verify action and property descriptions.</li></ol>
+<h3>8.6 Troubleshooting</h3>
+<ul><li>Confirm documentation generation is enabled.</li><li>Confirm the configured path points to the correct XML file.</li><li>Rebuild after project configuration changes.</li><li>Confirm the chosen generator supports the comments being used.</li><li>Check whether the relevant code element has an XML comment.</li></ul>
+</section>
+
+<section class="card searchable" id="p9">
+<h2>Part 9 — API Versioning</h2>
+<h3>9.1 Versioning fundamentals and why APIs need versions</h3>
+<p>API versioning allows a public API contract to evolve while existing clients continue using a supported earlier contract. It helps manage breaking changes, migration and client compatibility.</p>
+<h3>9.2 Breaking vs non-breaking changes</h3>
+<table><tr><th>Change</th><th>Typical classification</th></tr><tr><td>Add an optional response property.</td><td>Usually non-breaking, though strict clients can be affected.</td></tr><tr><td>Remove a response property.</td><td>Breaking for clients that rely on it.</td></tr><tr><td>Rename a property or change its type.</td><td>Typically breaking.</td></tr><tr><td>Add a new independent endpoint.</td><td>Usually non-breaking.</td></tr><tr><td>Make an optional request field mandatory.</td><td>Breaking for clients that omit it.</td></tr></table>
+<p>Classification depends on the exact contract and client behavior; additive changes are not guaranteed to be harmless to every client.</p>
+<h3>9.3 Backward compatibility and multiple versions</h3>
+<p>Backward compatibility means the API continues to support clients relying on the older contract. An API may expose v1 and v2 at the same time, allowing clients to migrate on their own schedule.</p>
+<h3>9.4 Four versioning strategies</h3>
+<table><tr><th>Strategy</th><th>Example</th><th>Trade-off</th></tr><tr><td>URL-based</td><td><code>/api/v1/students</code></td><td>Visible and easy to route; version appears in the URL.</td></tr><tr><td>Query-string</td><td><code>/api/students?api-version=1.0</code></td><td>Easy to add to a request; version is a query parameter.</td></tr><tr><td>Header-based</td><td><code>api-version: 1.0</code></td><td>Keeps version out of the URL; clients must send the header.</td></tr><tr><td>Media-type</td><td><code>Accept: application/json;v=1.0</code></td><td>Version is tied to the representation/media-type convention.</td></tr></table>
+<p>These are illustrative conventions. The exact parameter name, header and media-type syntax depend on the versioning library and configuration.</p>
+<h3>9.5 Version selection and versioned endpoints</h3>
+<p>Version selection determines which API version handles the request. Depending on the configured strategy, the version is read from the URL, query string, header or media type. Versioned endpoint metadata associates operations with the versions they support.</p>
+<h3>9.6 Supporting multiple versions and client compatibility</h3>
+<ul><li>Keep old and new contracts available when required.</li><li>Document differences between versions.</li><li>Give clients time to migrate.</li><li>Avoid silently changing the meaning of an existing field or operation.</li><li>Define behavior for unsupported or missing versions.</li></ul>
+<h3>9.7 API version lifecycle</h3>
+<div class="flow"><div>Design and introduce a version</div><div class="arrow">↓</div><div>Release and support clients</div><div class="arrow">↓</div><div>Introduce newer version if needed</div><div class="arrow">↓</div><div>Deprecate older version and communicate timeline</div><div class="arrow">↓</div><div>Retire older version according to policy</div></div>
+<p>Deprecation signals that a version is planned to be phased out; it does not necessarily mean it stops working immediately. Retirement is the point when support ends.</p>
+<h3>9.8 ASP.NET Core versioning concepts</h3>
+<p>Adding <code>/v1</code> to a URL alone does not configure a complete versioning system. A version-aware implementation typically configures version selection and associates endpoint/controller actions with supported versions, often using an API versioning package. API versioning is distinct from the deployed application's software version.</p>
+</section>
+
+<section class="card searchable" id="p10">
+<h2>Part 10 — Student Management System: Week 3 Application Plan</h2>
+<p>This section maps the theory to your actual learning project. It is a plan for later hands-on work, not a claim that these changes have already been implemented.</p>
+<h3>10.1 Error handling</h3>
+<ul><li>Review the existing API and its current exception-handling configuration.</li><li>Replace the custom global exception middleware approach with an <code>IExceptionHandler</code> implementation, as planned.</li><li>Register the handler and enable exception-handling middleware.</li><li>Map expected, known exceptions to appropriate HTTP responses.</li><li>Return consistent error bodies and avoid leaking internal details.</li><li>Test known errors and unexpected exceptions.</li></ul>
+<h3>10.2 API documentation</h3>
+<ul><li>Document controllers, action methods, models and properties.</li><li>Document method parameters, return values and relevant exceptions.</li><li>Document enums and their members where present.</li><li>Enable XML documentation generation.</li><li>Integrate the XML file with the existing OpenAPI/Swagger generator.</li><li>Verify the descriptions in Swagger UI.</li></ul>
+<h3>10.3 API versioning</h3>
+<ul><li>Understand the versioning requirement before choosing a strategy.</li><li>Compare URL, query-string, header and media-type approaches.</li><li>Define version selection and endpoint compatibility.</li><li>Implement versioning only after selecting a strategy appropriate to the project's framework and packages.</li></ul>
+<div class="callout good"><strong>Project constraints:</strong> Use the Student Management System, work in VS Code, and keep the implementation beginner-friendly. We will not introduce a separate service layer for this exercise.</div>
+<h3>10.4 Implementation readiness checklist</h3>
+<label class="checkrow"><input type="checkbox"> I can explain the purpose of each Week 3 topic.</label>
+<label class="checkrow"><input type="checkbox"> I understand the difference between expected error responses and unhandled exceptions.</label>
+<label class="checkrow"><input type="checkbox"> I understand how OpenAPI JSON and Swagger UI relate.</label>
+<label class="checkrow"><input type="checkbox"> I can explain XML documentation generation and integration.</label>
+<label class="checkrow"><input type="checkbox"> I understand the four API versioning strategies.</label>
+<label class="checkrow"><input type="checkbox"> I am ready to implement one concept at a time and test it.</label>
+</section>
+
+<section class="card searchable" id="cheatsheet">
+<h2>Revision Cheat Sheet</h2>
+<table><tr><th>Question</th><th>Remember</th></tr>
+<tr><td>REST vs HTTP?</td><td>REST is an architectural style; HTTP is a protocol.</td></tr>
+<tr><td>Resource vs endpoint?</td><td>Resource is the thing; endpoint is the method/route used to access an operation.</td></tr>
+<tr><td>Content-Type vs Accept?</td><td>Content-Type describes the sent body; Accept lists acceptable response media types.</td></tr>
+<tr><td>Safe vs idempotent?</td><td>Safe means intended read-only operation; idempotent means repeated requests have the same intended effect.</td></tr>
+<tr><td>Route vs query parameter?</td><td>Path identifies a resource; query commonly filters or modifies a collection query.</td></tr>
+<tr><td>Model vs business validation?</td><td>Model validation checks declared data rules; business validation checks domain rules.</td></tr>
+<tr><td>What does [ApiController] do?</td><td>Among other behaviors, it provides automatic 400 responses for invalid model state by default.</td></tr>
+<tr><td>What is IExceptionHandler?</td><td>A handler abstraction used by ASP.NET Core exception-handling middleware.</td></tr>
+<tr><td>AddExceptionHandler vs UseExceptionHandler?</td><td>Register the handler vs enable the middleware.</td></tr>
+<tr><td>OpenAPI vs Swagger UI?</td><td>Specification/document vs interactive documentation interface.</td></tr>
+<tr><td>API Explorer?</td><td>Exposes API action descriptions/metadata to documentation tooling.</td></tr>
+<tr><td>Reflection?</td><td>.NET inspection of types, members and attributes.</td></tr>
+<tr><td>XML docs vs OpenAPI JSON?</td><td>XML contains source comments; OpenAPI describes the API contract.</td></tr>
+<tr><td>Why API versioning?</td><td>Manage contract evolution and compatibility for clients.</td></tr>
+<tr><td>Does a URL containing v1 enable versioning?</td><td>No; version selection and endpoint support must be configured.</td></tr></table>
+</section>
+
+<section class="card searchable" id="quiz">
+<h2>Final Week 3 Quiz</h2>
+<p class="muted">Choose an answer for each question, then select “Check answers”. Explanations appear after checking.</p>
+<form id="quizForm">
+<div class="quiz-q" data-answer="b" data-explain="Statelessness means each request carries the information needed to process it; the server does not rely on retained conversational context.">
+<strong>1. Which REST constraint says the server should not rely on conversational state from a previous request?</strong>
+<label><input type="radio" name="q1" value="a"> Cacheability</label><label><input type="radio" name="q1" value="b"> Statelessness</label><label><input type="radio" name="q1" value="c"> Code on Demand</label><label><input type="radio" name="q1" value="d"> Layered System</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="c" data-explain="Accept tells the server which response media types the client can accept; Content-Type describes the body being sent.">
+<strong>2. What does the Accept header describe?</strong>
+<label><input type="radio" name="q2" value="a"> The API route</label><label><input type="radio" name="q2" value="b"> The request's HTTP method</label><label><input type="radio" name="q2" value="c"> Response media types the client can accept</label><label><input type="radio" name="q2" value="d"> The server's exception stack</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="a" data-explain="DELETE is idempotent in intended effect: after the resource is absent, repeating deletion does not remove it a second time. The second response may still differ.">
+<strong>3. Why can DELETE be idempotent if a repeated request returns 404?</strong>
+<label><input type="radio" name="q3" value="a"> The intended resource state remains unchanged after the first deletion</label><label><input type="radio" name="q3" value="b"> Every DELETE must return 204</label><label><input type="radio" name="q3" value="c"> DELETE is a safe method</label><label><input type="radio" name="q3" value="d"> HTTP ignores response codes</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="d" data-explain="The [controller] token uses the controller name without the Controller suffix; StudentsController becomes students.">
+<strong>4. In a route on StudentsController, what does [controller] resolve to?</strong>
+<label><input type="radio" name="q4" value="a"> Controller</label><label><input type="radio" name="q4" value="b"> StudentsController</label><label><input type="radio" name="q4" value="c"> api</label><label><input type="radio" name="q4" value="d"> students</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="b" data-explain="Query parameters are commonly used for filtering, sorting, searching and pagination; route parameters commonly identify a resource in the path.">
+<strong>5. Which is a common use of query parameters?</strong>
+<label><input type="radio" name="q5" value="a"> Register controllers</label><label><input type="radio" name="q5" value="b"> Filter or paginate a collection</label><label><input type="radio" name="q5" value="c"> Generate XML documentation</label><label><input type="radio" name="q5" value="d"> Define a C# enum</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="c" data-explain="Client-side validation improves user experience, but clients can bypass it. The API must enforce important validation rules on the server.">
+<strong>6. Why is server-side validation necessary?</strong>
+<label><input type="radio" name="q6" value="a"> It makes routing unnecessary</label><label><input type="radio" name="q6" value="b"> It replaces authentication</label><label><input type="radio" name="q6" value="c"> Clients can bypass frontend validation</label><label><input type="radio" name="q6" value="d"> It guarantees every request succeeds</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="a" data-explain="[ApiController] normally returns a 400 response automatically when model validation fails, before the action method executes.">
+<strong>7. What is the default invalid-model behavior associated with [ApiController]?</strong>
+<label><input type="radio" name="q7" value="a"> Automatic 400 Bad Request</label><label><input type="radio" name="q7" value="b"> Automatic 201 Created</label><label><input type="radio" name="q7" value="c"> Automatic database rollback in every case</label><label><input type="radio" name="q7" value="d"> Automatic API version upgrade</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="d" data-explain="AddExceptionHandler registers the handler. UseExceptionHandler adds the exception-handling middleware to the pipeline.">
+<strong>8. Which statement correctly distinguishes exception-handler registration from middleware?</strong>
+<label><input type="radio" name="q8" value="a"> Both commands only generate Swagger JSON</label><label><input type="radio" name="q8" value="b"> UseExceptionHandler registers controller services</label><label><input type="radio" name="q8" value="c"> AddExceptionHandler maps all routes</label><label><input type="radio" name="q8" value="d"> AddExceptionHandler registers the handler; UseExceptionHandler enables middleware</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="b" data-explain="API Explorer exposes descriptions of discovered API actions and endpoints for documentation tooling; it is not Swagger UI itself.">
+<strong>9. What is API Explorer's primary role in API documentation?</strong>
+<label><input type="radio" name="q9" value="a"> Execute controller methods without HTTP</label><label><input type="radio" name="q9" value="b"> Expose API descriptions and metadata to tooling</label><label><input type="radio" name="q9" value="c"> Store student records</label><label><input type="radio" name="q9" value="d"> Replace the OpenAPI specification</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="c" data-explain="GenerateDocumentationFile enables XML documentation output during compilation. Swagger integration is a separate configuration step.">
+<strong>10. What does GenerateDocumentationFile enable?</strong>
+<label><input type="radio" name="q10" value="a"> API version selection</label><label><input type="radio" name="q10" value="b"> Automatic exception mapping</label><label><input type="radio" name="q10" value="c"> XML documentation file generation</label><label><input type="radio" name="q10" value="d"> Database creation</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="a" data-explain="URL-based versioning places a version segment in the path, such as /api/v1/students.">
+<strong>11. Which is an example of URL-based versioning?</strong>
+<label><input type="radio" name="q11" value="a"> /api/v1/students</label><label><input type="radio" name="q11" value="b"> Accept: application/json</label><label><input type="radio" name="q11" value="c"> Content-Type: application/json</label><label><input type="radio" name="q11" value="d"> /api/students?grade=A</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<div class="quiz-q" data-answer="d" data-explain="Swagger UI reads an OpenAPI description and renders it as interactive documentation. It sends HTTP requests to the API when users execute operations.">
+<strong>12. Which statement about Swagger UI is correct?</strong>
+<label><input type="radio" name="q12" value="a"> It replaces server-side validation</label><label><input type="radio" name="q12" value="b"> It directly invokes C# methods without HTTP</label><label><input type="radio" name="q12" value="c"> It is the same thing as XML documentation</label><label><input type="radio" name="q12" value="d"> It displays API documentation and can send HTTP requests</label><details class="answer result hidden"><summary>Answer and explanation</summary><div class="explain"></div></details>
+</div>
+<button class="btn" type="button" id="checkQuiz">Check answers</button>
+<button class="btn" type="button" id="resetQuiz">Reset quiz</button>
+<p id="quizScore" aria-live="polite"></p>
+</form>
+</section>
+
+<section class="card searchable" id="glossary">
+<h2>Glossary</h2>
+<table><tr><th>Term</th><th>Short definition</th></tr>
+<tr><td>REST</td><td>Architectural style for networked systems.</td></tr><tr><td>HTTP</td><td>Request/response protocol used by web APIs.</td></tr><tr><td>Resource</td><td>Conceptual item exposed by an API.</td></tr><tr><td>Endpoint</td><td>Route/method combination that exposes an operation.</td></tr><tr><td>HATEOAS</td><td>Hypermedia as the Engine of Application State.</td></tr><tr><td>Idempotent</td><td>Repeating a request has the same intended effect on server state.</td></tr><tr><td>Routing</td><td>Matching requests to endpoints.</td></tr><tr><td>Model binding</td><td>Maps request data to action parameters or model objects.</td></tr><tr><td>Model validation</td><td>Checks bound model data against validation rules.</td></tr><tr><td>Business validation</td><td>Checks domain-specific rules.</td></tr><tr><td>ProblemDetails</td><td>Standardized shape for describing an HTTP API problem.</td></tr><tr><td>IExceptionHandler</td><td>ASP.NET Core interface for centralized exception handling.</td></tr><tr><td>OpenAPI</td><td>Specification for describing HTTP APIs.</td></tr><tr><td>Swagger UI</td><td>Interactive interface that renders an OpenAPI document.</td></tr><tr><td>API Explorer</td><td>Exposes API action descriptions to tooling.</td></tr><tr><td>Reflection</td><td>.NET ability to inspect types and members at runtime.</td></tr><tr><td>XML documentation</td><td>Structured C# comments that can be emitted into an XML file.</td></tr><tr><td>Backward compatibility</td><td>Continued support for clients using an earlier contract.</td></tr><tr><td>Deprecation</td><td>Notice that a feature/version is planned to be phased out.</td></tr></table>
+</section>
+<div class="footer">Week 3 study guide · Student Management System · Theory first, implementation later</div>
+</main>
+</div>
+<script>
+(function(){
+ const root=document.documentElement;
+ const themeBtn=document.getElementById('themeBtn');
+ const savedTheme=localStorage.getItem('week3-theme');
+ if(savedTheme) root.setAttribute('data-theme',savedTheme);
+ themeBtn.addEventListener('click',()=>{const next=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',next);localStorage.setItem('week3-theme',next)});
+ const search=document.getElementById('search');
+ search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();document.querySelectorAll('.searchable').forEach(section=>{section.classList.toggle('hidden',q!==''&&!section.innerText.toLowerCase().includes(q))})});
+ const checks=[...document.querySelectorAll('#checklist input')];
+ function progress(){const n=checks.filter(c=>c.checked).length;document.getElementById('progressBar').style.width=(n/checks.length*100)+'%';document.getElementById('progressLabel').textContent=n+' of '+checks.length+' parts marked complete'}
+ checks.forEach(c=>c.addEventListener('change',progress));progress();
+ document.getElementById('checkQuiz').addEventListener('click',()=>{let score=0,total=0;document.querySelectorAll('.quiz-q').forEach(q=>{total++;const selected=q.querySelector('input:checked');const correct=selected&&selected.value===q.dataset.answer;if(correct)score++;const details=q.querySelector('.result');details.classList.remove('hidden');details.open=true;details.querySelector('.explain').textContent=(correct?'Correct. ':'Not quite. ')+q.dataset.explain});document.getElementById('quizScore').textContent='Your score: '+score+' / '+total+' ('+Math.round(score/total*100)+'%). Review the explanations above.'});
+ document.getElementById('resetQuiz').addEventListener('click',()=>{document.getElementById('quizForm').reset();document.querySelectorAll('.quiz-q .result').forEach(d=>{d.classList.add('hidden');d.open=false;d.querySelector('.explain').textContent=''});document.getElementById('quizScore').textContent=''});
+})();
+</script>
+</body>
+</html>
