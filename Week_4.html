@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 4 — EF Core & PostgreSQL Master Study Guide</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--panel2:#edf2f8;--text:#172033;--muted:#596579;--line:#dbe2ec;--accent:#4f46e5;--accent2:#e8e7ff;--good:#147d55;--shadow:0 8px 24px rgba(20,30,60,.07)}
+[data-theme="dark"]{--bg:#10131b;--panel:#191e29;--panel2:#222a38;--text:#edf1f8;--muted:#b2bdcf;--line:#30394a;--accent:#a5a1ff;--accent2:#2b2a50;--good:#71d8ad;--shadow:0 8px 24px rgba(0,0,0,.2)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer}
+.topbar{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:12px 20px;box-shadow:var(--shadow)}
+.brand{font-weight:800;letter-spacing:-.3px;white-space:nowrap}.brand span{color:var(--accent)}.search{flex:1;max-width:540px;margin:auto}.search input{width:100%;padding:10px 13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);outline:none}.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:8px 12px;border-radius:10px}.btn:hover{border-color:var(--accent)}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr);max-width:1600px;margin:auto;min-height:calc(100vh - 60px)}
+.sidebar{position:sticky;top:61px;align-self:start;height:calc(100vh - 61px);overflow:auto;border-right:1px solid var(--line);background:var(--panel);padding:18px 12px}
+.side-title{padding:4px 10px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:800}.navlink{display:block;padding:8px 10px;margin:2px 0;border-radius:9px;color:var(--muted);text-decoration:none;font-size:13px}.navlink:hover,.navlink.active{background:var(--accent2);color:var(--accent);font-weight:700}
+.progress-wrap{padding:12px;margin:8px 4px 18px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}.progress-head{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}progress{width:100%;height:8px;accent-color:var(--accent);margin-top:7px}
+main{padding:30px clamp(16px,4vw,58px) 80px;min-width:0}.hero{background:linear-gradient(130deg,var(--panel),var(--accent2));border:1px solid var(--line);padding:clamp(22px,4vw,42px);border-radius:22px;box-shadow:var(--shadow);margin-bottom:22px}.eyebrow{color:var(--accent);font-weight:800;text-transform:uppercase;font-size:12px;letter-spacing:1.4px}.hero h1{font-size:clamp(28px,4vw,46px);line-height:1.1;letter-spacing:-1.2px;margin:10px 0}.hero p{max-width:850px;color:var(--muted);font-size:16px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.chip{font-size:12px;padding:5px 10px;border:1px solid var(--line);background:var(--panel);border-radius:999px;color:var(--muted)}
+.callout{border-left:4px solid var(--accent);background:var(--panel2);padding:12px 15px;border-radius:0 10px 10px 0;margin:16px 0}.section{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:24px;margin:18px 0;box-shadow:var(--shadow);scroll-margin-top:82px}.section h2{font-size:24px;line-height:1.25;margin:0 0 5px;letter-spacing:-.5px}.subtitle{color:var(--muted);margin:0 0 18px}.section h3{font-size:17px;margin:22px 0 8px}.section h4{font-size:14px;margin:16px 0 5px}.section p{margin:8px 0}.section ul,.section ol{padding-left:23px}.section li{margin:4px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}.mini{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:13px}.mini strong{display:block;margin-bottom:4px}.muted{color:var(--muted)}table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px;display:block;overflow-x:auto}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top;min-width:120px}th{background:var(--panel2)}code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}code{background:var(--panel2);padding:2px 5px;border-radius:5px;font-size:.92em}pre{overflow:auto;background:#151a25;color:#e6eaf2;padding:15px;border-radius:12px;font-size:13px;line-height:1.6}pre code{background:transparent;padding:0;color:inherit}.quiz{border:1px solid var(--line);border-radius:12px;padding:15px;margin-top:18px;background:var(--bg)}.quiz h3{margin:0 0 12px}.q{padding:11px 0;border-top:1px solid var(--line)}.q:first-of-type{border-top:0}.q label{display:block;font-weight:650;margin-bottom:7px}.q option{color:#111}.q select{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)}.answer{display:none;font-size:13px;color:var(--good);margin-top:7px}.show-answers .answer{display:block}.checklist{list-style:none;padding:0!important}.checklist li{padding:5px 0}.checklist input{accent-color:var(--accent);margin-right:8px}.footer{color:var(--muted);text-align:center;padding:35px 0}.hidden{display:none!important}.tag{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:6px;padding:2px 6px;color:var(--muted);margin-right:4px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto;max-height:250px;border-right:0;border-bottom:1px solid var(--line)}.topbar{flex-wrap:wrap}.brand{font-size:14px}.search{order:3;max-width:none;flex-basis:100%}main{padding:18px 12px 50px}.section{padding:17px}.sidebar .navlink{display:inline-block;margin:2px}.side-title{margin-top:8px}}
+@media print{.topbar,.sidebar,.quiz button,.btn{display:none!important}.layout{display:block}.section,.hero{box-shadow:none;break-inside:avoid}body{background:white;color:#111}.section{border:1px solid #ccc}.answer{display:block}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">.NET <span>WEEK 4</span> STUDY GUIDE</div>
+  <div class="search"><input id="search" type="search" placeholder="Search topics, terms, methods…" aria-label="Search study guide"></div>
+  <button class="btn" id="themeBtn" type="button">☾ Theme</button>
+  <button class="btn" onclick="window.print()" type="button">Print / PDF</button>
+</header>
+<div class="layout">
+<aside class="sidebar">
+  <div class="progress-wrap"><div class="progress-head"><span>Study checklist</span><strong id="progressText">0%</strong></div><progress id="progress" value="0" max="100"></progress><small class="muted">Mark sections complete as you revise.</small></div>
+  <div class="side-title">Foundations</div>
+  <a class="navlink" href="#p1">01 · Database Fundamentals</a>
+  <a class="navlink" href="#p2">02 · PostgreSQL</a>
+  <a class="navlink" href="#p3">03 · ORM Fundamentals</a>
+  <a class="navlink" href="#p4">04 · EF Core Architecture</a>
+  <a class="navlink" href="#p5">05 · Development Approaches</a>
+  <a class="navlink" href="#p6">06 · DbContext</a>
+  <a class="navlink" href="#p7">07 · DbSet</a>
+  <a class="navlink" href="#p8">08 · Change Tracker</a>
+  <div class="side-title">Model & Schema</div>
+  <a class="navlink" href="#p9">09 · EF Configuration</a>
+  <a class="navlink" href="#p10">10 · Model Building</a>
+  <a class="navlink" href="#p11">11 · Migrations</a>
+  <a class="navlink" href="#p12">12 · Configuration Approaches</a>
+  <a class="navlink" href="#p13">13 · Entity Relationships</a>
+  <a class="navlink" href="#p14">14 · Navigation Properties</a>
+  <a class="navlink" href="#p15">15 · Relationship Discovery</a>
+  <a class="navlink" href="#p16">16 · One-to-Many</a>
+  <a class="navlink" href="#p17">17 · One-to-One</a>
+  <a class="navlink" href="#p18">18 · Fluent API</a>
+  <a class="navlink" href="#p25">25 · InverseProperty</a>
+  <div class="side-title">Data & Architecture</div>
+  <a class="navlink" href="#p19">19 · CRUD Operations</a>
+  <a class="navlink" href="#p20">20 · Repository Pattern</a>
+  <a class="navlink" href="#p21">21 · Unit of Work</a>
+  <a class="navlink" href="#p22">22 · Generic Repository</a>
+  <a class="navlink" href="#p23">23 · DTOs</a>
+  <a class="navlink" href="#p24">24 · Related Data Loading</a>
+  <a class="navlink" href="#p26">26 · Indexing</a>
+  <a class="navlink" href="#p27">27 · Enum Mapping</a>
+  <a class="navlink" href="#p28">28 · Serilog</a>
+  <a class="navlink" href="#p29">29 · Database First & Scaffold</a>
+  <a class="navlink" href="#p30">30 · Re-scaffolding</a>
+  <div class="side-title">Revision</div>
+  <a class="navlink" href="#cheatsheet">Cheat Sheet</a>
+  <a class="navlink" href="#finalquiz">Final Revision Quiz</a>
+</aside>
+<main>
+<section class="hero">
+  <div class="eyebrow">Weeks 4 · Theory revision before implementation</div>
+  <h1>EF Core & PostgreSQL<br>Master Study Guide</h1>
+  <p>A beginner-friendly, searchable revision page covering the 30 theory parts studied so far: database foundations, PostgreSQL, EF Core, schema configuration, relationships, CRUD, repositories, DTOs, loading related data, indexing, enums, Serilog, Database First, and re-scaffolding.</p>
+  <div class="chips"><span class="chip">30 topics</span><span class="chip">Searchable</span><span class="chip">Dark / light theme</span><span class="chip">Checklists</span><span class="chip">Quizzes with hidden answers</span><span class="chip">Student + Employee examples</span></div>
+  <div class="callout"><strong>How to use:</strong> read one section, mark its checklist item, then answer its quiz before revealing the explanation. The Employee Management examples are used where the syllabus does so; the Database First practical example uses Student Management.</div>
+</section>
+
+<section class="section searchable" id="p1">
+<h2>01. Database Fundamentals</h2><p class="subtitle">Database, tables, SQL basics, DBMS and RDBMS.</p>
+<h3>Core terms</h3>
+<ul><li><strong>Database:</strong> organized collection of data that can be stored, queried, updated and managed.</li><li><strong>Table:</strong> related data arranged in rows and columns.</li><li><strong>Row/record:</strong> one stored instance, such as one student.</li><li><strong>Column/field:</strong> one attribute, such as Name or Age.</li><li><strong>Schema:</strong> the structure that defines tables, columns, types, keys, constraints and relationships.</li><li><strong>Primary key (PK):</strong> uniquely identifies a row. A PK must be unique and non-null.</li><li><strong>Foreign key (FK):</strong> references a key in another table and helps enforce referential integrity.</li></ul>
+<h3>SQL fundamentals</h3>
+<table><tr><th>Operation</th><th>Purpose</th><th>Example</th></tr><tr><td>SELECT</td><td>Read data</td><td><code>SELECT * FROM Student;</code></td></tr><tr><td>INSERT</td><td>Add rows</td><td><code>INSERT INTO Student (Name) VALUES ('Asha');</code></td></tr><tr><td>UPDATE</td><td>Change existing rows</td><td><code>UPDATE Student SET Age = 22 WHERE Id = 1;</code></td></tr><tr><td>DELETE</td><td>Remove rows</td><td><code>DELETE FROM Student WHERE Id = 1;</code></td></tr></table>
+<ul><li><code>WHERE</code> filters rows; always check the predicate before UPDATE or DELETE.</li><li><code>ORDER BY</code> sorts results; <code>GROUP BY</code> groups rows for aggregate calculations.</li><li>Common aggregates: <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code>.</li><li><strong>DBMS:</strong> software to create, query, secure and manage databases.</li><li><strong>RDBMS:</strong> a DBMS based on relational tables, keys, constraints and relationships. PostgreSQL is an RDBMS.</li></ul>
+<div class="quiz"><h3>Check your understanding</h3><div class="q"><label>Which SQL command retrieves data?</label><select data-answer="SELECT"><option value="">Choose…</option><option>INSERT</option><option>SELECT</option><option>DELETE</option></select><div class="answer">Answer: SELECT — it reads data from tables.</div></div><button class="btn reveal">Show answers</button></div><ul class="checklist"><li><label><input type="checkbox">I can explain tables, rows, columns, PKs and FKs.</label></li><li><label><input type="checkbox">I can distinguish DBMS and RDBMS and identify basic SQL operations.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p2">
+<h2>02. PostgreSQL</h2><p class="subtitle">Relational database, architecture, transactions, concurrency, reliability and .NET connectivity.</p>
+<ul><li><strong>PostgreSQL:</strong> open-source object-relational database system with SQL support, constraints, indexes, transactions and extensibility.</li><li><strong>Architecture:</strong> client/application connects to the PostgreSQL server; the server processes SQL, accesses data and returns results. PostgreSQL uses processes and shared resources to handle connections and work.</li><li><strong>SQL support:</strong> queries, joins, aggregates, constraints, views, transactions and advanced database features.</li><li><strong>Transactions / ACID:</strong> Atomicity (all or nothing), Consistency (valid state), Isolation (concurrent work is controlled), Durability (committed work persists).</li><li><strong>Concurrency:</strong> PostgreSQL uses MVCC (multi-version concurrency control) so concurrent readers and writers can often proceed without blocking one another unnecessarily. Locks still exist.</li><li><strong>Scalability:</strong> suitable indexing, query tuning, connection management, partitioning, replication and infrastructure choices support growth.</li><li><strong>Reliability:</strong> write-ahead logging (WAL), backups, recovery and replication options support durability and availability; these must be configured and tested.</li><li><strong>Cross-platform:</strong> runs on major operating systems and supports many client languages.</li><li><strong>PostgreSQL + .NET:</strong> Npgsql is the .NET data provider; <code>Npgsql.EntityFrameworkCore.PostgreSQL</code> integrates PostgreSQL with EF Core.</li></ul>
+<h3>Connection string parts</h3><table><tr><th>Field</th><th>Meaning</th></tr><tr><td>Host</td><td>Server name or address</td></tr><tr><td>Port</td><td>PostgreSQL listening port (often 5432)</td></tr><tr><td>Database</td><td>Target database name</td></tr><tr><td>Username / Password</td><td>Credentials used to authenticate</td></tr></table>
+<div class="callout">Keep credentials out of source control. Use development secrets or environment-specific configuration, and restrict database permissions.</div>
+<div class="quiz"><h3>Check your understanding</h3><div class="q"><label>Which .NET provider integrates EF Core with PostgreSQL?</label><select data-answer="Npgsql"><option value="">Choose…</option><option>SqlClient only</option><option>Npgsql</option><option>Serilog</option></select><div class="answer">Answer: Npgsql, via the PostgreSQL EF Core provider package.</div></div><button class="btn reveal">Show answers</button></div>
+<ul class="checklist"><li><label><input type="checkbox">I can explain ACID, MVCC, WAL and the role of Npgsql.</label></li><li><label><input type="checkbox">I know the connection string fields and credential-safety basics.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p3">
+<h2>03. ORM Fundamentals</h2><p class="subtitle">Object-relational mapping: translating between C# objects and relational data.</p>
+<ul><li><strong>ORM:</strong> maps object-oriented code to relational tables and columns.</li><li><strong>Object-to-table mapping:</strong> a C# entity type maps to a table or other database object; properties map to columns; relationships map to keys and navigation properties.</li><li><strong>Automatic SQL:</strong> an ORM can translate supported LINQ expressions into SQL and map returned rows to objects.</li><li><strong>Typical workflow:</strong> create/query an entity → ORM tracks or materializes it → changes are saved → provider executes database commands.</li><li><strong>Advantages:</strong> less repetitive SQL, productivity, compile-time typing for many queries, maintainability and centralized mapping.</li><li><strong>Limitations:</strong> query translation has limits, generated SQL may be inefficient, abstraction can hide database behavior, and complex reports may need carefully written SQL.</li><li><strong>Performance:</strong> understand generated SQL, avoid loading unnecessary columns/rows, watch for N+1 queries and excessive tracking.</li><li><strong>Raw SQL:</strong> useful for provider-specific or complex operations, but parameterize values and avoid unsafe string concatenation.</li></ul>
+<div class="quiz"><h3>Check your understanding</h3><div class="q"><label>Does an ORM remove the need to understand SQL and database performance?</label><select data-answer="No"><option value="">Choose…</option><option>Yes</option><option>No</option></select><div class="answer">Answer: No. An ORM reduces repetitive work but generated SQL, indexing and query plans still matter.</div></div><button class="btn reveal">Show answers</button></div>
+<ul class="checklist"><li><label><input type="checkbox">I can describe ORM benefits and trade-offs.</label></li><li><label><input type="checkbox">I understand when raw SQL may still be appropriate.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p4">
+<h2>04. Entity Framework Core (EF Core)</h2><p class="subtitle">The .NET ORM and its architecture.</p>
+<ul><li><strong>EF Core:</strong> Microsoft's cross-platform ORM for .NET; it maps entity classes to database structures and supports LINQ queries and change tracking.</li><li><strong>Provider model:</strong> a database provider translates EF Core operations into database-specific SQL and communicates with the database driver.</li><li><strong>DbContext:</strong> session-like unit for querying, tracking and saving entities.</li><li><strong>DbSet&lt;T&gt;:</strong> access point for querying and operating on a particular entity type.</li><li><strong>Change Tracker:</strong> records entity states and property changes for persistence.</li><li><strong>LINQ query processing:</strong> EF Core builds a query expression, translates supported parts into SQL, executes it through the provider, and materializes results.</li><li><strong>Request flow:</strong> API/controller → application/data layer → DbContext → EF provider/Npgsql → PostgreSQL → results back through the application.</li><li><strong>Benefits:</strong> LINQ, tracking, migrations, relationships, multiple providers and reduced repetitive SQL.</li><li><strong>Limitations:</strong> provider differences, translation limitations, tracking overhead, and need to inspect SQL for performance-sensitive queries.</li></ul>
+<div class="quiz"><h3>Check your understanding</h3><div class="q"><label>Which component tracks entity states?</label><select data-answer="Change Tracker"><option value="">Choose…</option><option>Swagger</option><option>Change Tracker</option><option>Serilog sink</option></select><div class="answer">Answer: Change Tracker, which works as part of DbContext.</div></div><button class="btn reveal">Show answers</button></div>
+<ul class="checklist"><li><label><input type="checkbox">I can explain DbContext, DbSet, Change Tracker and provider responsibilities.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p5">
+<h2>05. EF Core Development Approaches</h2><p class="subtitle">Code First, Database First and Model First.</p>
+<div class="grid"><div class="mini"><strong>Code First</strong>Define entity classes and model configuration in C#. Use migrations to create or update the database schema. Useful when the application team owns schema evolution.</div><div class="mini"><strong>Database First</strong>Start with an existing database. Scaffold entity classes and DbContext from its schema. Useful when the database already exists or is managed externally.</div><div class="mini"><strong>Model First</strong>Historically, EF6 supported a visual EDMX model-first workflow. EF Core does not provide the same built-in classic EDMX Model First designer workflow.</div></div>
+<h3>Typical workflows</h3><ol><li>Code First: define entities/configuration → create migration → inspect migration → update database.</li><li>Database First: design or connect to database → scaffold → review generated entities/context → use in application.</li><li>Model First conceptually: design a model then generate a schema; for EF Core, similar goals need other design tools or a code-first workflow.</li></ol>
+<h3>Trade-offs</h3><ul><li>Code First offers application-controlled schema changes and migration history, but model and database must stay synchronized.</li><li>Database First reflects the real schema, but re-scaffolding and custom-code separation must be managed.</li><li>Choose based on who owns the schema, whether it already exists, and team deployment practices.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can compare Code First and Database First and explain EF Core's Model First limitation.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p6">
+<h2>06. DbContext</h2><p class="subtitle">Query execution, entity management, saving, lifecycle, dependency injection and disposal.</p>
+<ul><li><strong>Purpose:</strong> coordinates queries, entity tracking and persistence; behaves like a short-lived session/unit of work.</li><li><strong>Entity management:</strong> tracks entities returned by tracking queries and entities attached or added by application code.</li><li><strong>Query execution:</strong> LINQ queries are composed first; terminal operations such as <code>ToListAsync()</code> execute them. EF translates supported expressions and materializes results.</li><li><strong>Saving:</strong> <code>SaveChanges()</code>/<code>SaveChangesAsync()</code> detects changes and asks the provider to persist inserts, updates and deletes.</li><li><strong>Lifecycle:</strong> DbContext is not thread-safe. Use a short-lived instance, commonly one scoped instance per web request; dispose it when done.</li><li><strong>Dependency Injection:</strong> <code>AddDbContext&lt;TContext&gt;()</code> registers a scoped context by default in ASP.NET Core. Configure its provider and connection through options.</li><li><strong>Change detection:</strong> EF Core compares tracked values/snapshots or uses configured notifications to determine changes.</li><li><strong>Tracking vs no-tracking:</strong> tracked queries support updates through the context; <code>AsNoTracking()</code> can reduce overhead for read-only results.</li><li><strong>Async:</strong> use asynchronous database operations in web apps to avoid blocking request threads while waiting for I/O. Do not run concurrent operations on the same DbContext.</li></ul>
+<pre><code>// Conceptual registration
+builder.Services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
+    options.UseNpgsql(connectionString));</code></pre>
+<div class="quiz"><h3>Check your understanding</h3><div class="q"><label>Is DbContext safe for simultaneous operations from multiple threads?</label><select data-answer="No"><option value="">Choose…</option><option>Yes</option><option>No</option></select><div class="answer">Answer: No. Use separate context instances for concurrent operations.</div></div><button class="btn reveal">Show answers</button></div>
+<ul class="checklist"><li><label><input type="checkbox">I understand DbContext lifecycle, DI, async operations and tracking.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p7">
+<h2>07. DbSet&lt;T&gt;</h2><p class="subtitle">Entity collections, querying and state-changing methods.</p>
+<ul><li><code>DbSet&lt;Student&gt;</code> or <code>DbSet&lt;Employee&gt;</code> represents the set of an entity type in the EF Core model and is used to query and operate on it.</li><li><strong>Querying:</strong> compose LINQ using methods such as <code>Where()</code>, <code>OrderBy()</code>, <code>Select()</code> and terminal operators such as <code>ToListAsync()</code>.</li><li><strong>Changes:</strong> <code>Add()</code> marks an entity Added; <code>Update()</code> attaches/marks an entity for update; <code>Remove()</code> marks it Deleted. These usually stage state rather than immediately executing SQL.</li><li><strong>DbContext interaction:</strong> DbSet operations coordinate with the context's Change Tracker; the context discovers/configures entity types through its model.</li><li><strong>Deferred execution:</strong> query composition alone generally does not execute SQL; enumeration or terminal operations do.</li><li><strong>Persistence:</strong> call SaveChanges/SaveChangesAsync to persist pending changes.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can distinguish composing a query, changing entity state and saving changes.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p8">
+<h2>08. Change Tracker</h2><p class="subtitle">Entity states, original/current values, snapshots, detection and SaveChanges workflow.</p>
+<table><tr><th>State</th><th>Meaning</th><th>Typical example</th></tr><tr><td>Detached</td><td>Not tracked by this context</td><td>New object not attached</td></tr><tr><td>Added</td><td>Will be inserted on save</td><td>After Add()</td></tr><tr><td>Unchanged</td><td>Tracked, no detected changes</td><td>Fresh tracked query result</td></tr><tr><td>Modified</td><td>One or more properties changed/marked</td><td>Tracked property updated</td></tr><tr><td>Deleted</td><td>Will be deleted on save</td><td>After Remove()</td></tr></table>
+<ul><li>EF Core retains original and current values for tracked properties; snapshot tracking can compare them to detect changes.</li><li>Changes can be detected automatically during SaveChanges, or explicitly via change-detection APIs.</li><li>Typical lifecycle: query/attach/add → state tracking → change properties → detect changes → SaveChanges → database commands → states normally become Unchanged after successful save (deleted entries are detached).</li><li>Inspect with <code>context.Entry(entity).State</code> and <code>context.ChangeTracker.Entries()</code>.</li><li><code>AsNoTracking()</code> avoids tracking for read-only queries, but those results are not automatically tracked for later updates.</li></ul>
+<div class="quiz"><h3>Check your understanding</h3><div class="q"><label>What state does Add() normally set?</label><select data-answer="Added"><option value="">Choose…</option><option>Modified</option><option>Added</option><option>Deleted</option></select><div class="answer">Answer: Added. The INSERT is normally sent when changes are saved.</div></div><button class="btn reveal">Show answers</button></div>
+<ul class="checklist"><li><label><input type="checkbox">I can name and explain all five entity states and the save workflow.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p9">
+<h2>09. EF Core Configuration</h2><p class="subtitle">DbContextOptions, provider, connection strings, logging, tracking, DI and packages.</p>
+<ul><li><strong>DbContextOptions:</strong> holds configuration such as provider, connection, logging and context behavior.</li><li><strong>DbContextOptions&lt;TContext&gt;:</strong> typed options supplied to the context constructor; the context commonly passes them to <code>base(options)</code>.</li><li><strong>Provider:</strong> configure PostgreSQL with <code>UseNpgsql()</code>; another provider would use its own extension.</li><li><strong>Connection string:</strong> Host, Port, Database, Username and Password identify the connection. Store secrets securely and vary configuration by environment.</li><li><strong>Logging:</strong> EF Core logging can expose generated SQL and database activity; avoid leaking sensitive values in logs.</li><li><strong>Tracking behavior:</strong> can be configured for a context, and individual queries can use <code>AsNoTracking()</code>.</li><li><strong>DI:</strong> <code>AddDbContext&lt;TContext&gt;()</code> commonly registers the context as scoped. Inject it rather than manually constructing it in controllers.</li><li><strong>Packages:</strong> EF Core runtime, provider, design-time package/tooling and Npgsql driver/provider must be compatible versions.</li><li><strong>Design-time vs runtime:</strong> runtime configuration serves the running app; design-time tooling must also be able to create/configure the context for migrations or scaffolding.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can explain provider configuration, connection strings, DI and design-time needs.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p10">
+<h2>10. EF Core Model Building</h2><p class="subtitle">Model metadata, entity/property discovery, ModelBuilder, OnModelCreating and caching.</p>
+<ul><li><strong>EF model:</strong> metadata describing entity types, properties, keys, indexes, relationships, mappings and constraints.</li><li><strong>Discovery:</strong> EF Core discovers entity types through DbSet properties, navigation properties and explicit configuration. Property conventions infer types and relationships where possible.</li><li><strong>Metadata:</strong> EF Core builds a model from conventions, attributes and Fluent API, then uses it to translate queries and persist changes.</li><li><strong>Model caching:</strong> the model is typically built once per context model configuration and cached to avoid rebuilding for every query.</li><li><strong>ModelBuilder:</strong> the API used to configure entities and their mapping.</li><li><strong>OnModelCreating(ModelBuilder):</strong> override in DbContext to add model configuration.</li><li><strong>Entity&lt;T&gt;():</strong> selects an entity for configuration, for example <code>modelBuilder.Entity&lt;Employee&gt;()</code>.</li><li><strong>Fluent API:</strong> configures columns, keys, indexes, relationships and other details in code.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can explain how EF Core builds and uses its model metadata.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p11">
+<h2>11. EF Core Migrations</h2><p class="subtitle">Schema synchronization, migration files, commands, history, applying and rollback.</p>
+<ul><li><strong>Purpose:</strong> record incremental schema changes so a database can be updated as the model evolves.</li><li><strong>Workflow:</strong> change model → add migration → inspect generated operations → apply migration to database.</li><li><strong>Initial migration:</strong> creates schema operations for the current model. Use a meaningful migration name.</li><li><strong>Migration class:</strong> contains <code>Up()</code> operations to apply changes and <code>Down()</code> operations to reverse them where possible.</li><li><strong>Designer file:</strong> stores migration metadata/target model information used by tooling. The exact generated file arrangement depends on EF Core tooling.</li><li><strong>Model snapshot:</strong> records the current model used to compare later changes when generating migrations.</li><li><strong>Partial migrations:</strong> generated migration classes may be partial; normally inspect generated operations rather than casually editing them.</li><li><strong>History table:</strong> <code>__EFMigrationsHistory</code> records applied migrations, commonly with migration ID and product version.</li><li><strong>Commands:</strong> <code>dotnet ef migrations add Name</code>, <code>dotnet ef database update</code>, <code>dotnet ef database update MigrationName</code>, <code>dotnet ef migrations remove</code>, <code>dotnet ef migrations list</code>, <code>dotnet ef migrations script</code>, <code>dotnet ef database drop</code>.</li><li><strong>MigrationBuilder:</strong> supplies operations such as create/drop table, add/drop column, add foreign key and create index; provider generates provider-specific SQL.</li><li><strong>Apply/rollback:</strong> updating to a target migration applies or reverts migrations in the chain. Rollbacks can lose data, so review before production use.</li><li><strong>Scripts:</strong> SQL scripts can be reviewed and deployed through controlled release processes.</li><li><strong>Design time:</strong> tooling must construct the DbContext to discover the model and generate migrations; design-time services/configuration are separate from normal request execution.</li></ul>
+<div class="callout"><strong>Safety:</strong> do not treat migrations as a substitute for backups or production deployment review. Inspect generated SQL, test migrations and plan for existing data.</div>
+<ul class="checklist"><li><label><input type="checkbox">I understand migration files, Up/Down, snapshot, history and core CLI commands.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p12">
+<h2>12. EF Core Configuration Approaches</h2><p class="subtitle">Conventions, data annotations, Fluent API and precedence.</p>
+<div class="grid"><div class="mini"><strong>Conventions</strong>EF Core's default rules infer common keys, relationships and column mappings. Least explicit, minimal code.</div><div class="mini"><strong>Data annotations</strong>Attributes on entity properties/classes, such as <code>[Key]</code>, <code>[Required]</code>, <code>[MaxLength(100)]</code>, <code>[StringLength]</code>, <code>[Table]</code>, <code>[Column]</code> and <code>[ForeignKey]</code>.</div><div class="mini"><strong>Fluent API</strong>Central configuration in <code>OnModelCreating()</code> using methods such as <code>HasKey</code>, <code>Property</code>, <code>IsRequired</code>, <code>HasMaxLength</code> and relationship methods.</div></div>
+<ul><li><strong>Typical precedence:</strong> explicit Fluent API overrides data annotations, which override conventions for the same configuration.</li><li>Use conventions for standard cases; annotations for simple model-local rules; Fluent API for advanced or centralized configuration.</li><li>Keep configurations readable and avoid contradictory rules across approaches.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can compare conventions, attributes and Fluent API and recall their precedence.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p13">
+<h2>13. Entity Relationships</h2><p class="subtitle">Normalization, keys, cardinality, principal/dependent and integrity.</p>
+<ul><li><strong>Why relationships:</strong> connect related data while avoiding unnecessary duplication.</li><li><strong>Normalization:</strong> store each fact in an appropriate place to reduce redundancy and update anomalies. For example, store Department details once rather than repeating the department name on every employee row.</li><li><strong>One-to-one:</strong> one principal row relates to at most one dependent row, and vice versa according to the model.</li><li><strong>One-to-many:</strong> one Department can relate to many Employees; the FK is commonly on Employee, the many/dependent side.</li><li><strong>Many-to-many:</strong> many students can join many courses; typically represented by a join table/entity with two foreign keys.</li><li><strong>PK/FK:</strong> primary keys identify rows; foreign keys reference principal keys.</li><li><strong>Referential integrity:</strong> foreign-key constraints prevent references to nonexistent principal rows.</li><li><strong>Principal/dependent:</strong> the principal is the referenced side; the dependent holds the FK in typical relationships.</li><li><strong>Discovery:</strong> EF Core considers navigation properties, FK naming, keys, conventions and explicit metadata/configuration.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can describe all three relationship types and identify PK/FK and principal/dependent.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p14">
+<h2>14. Navigation Properties</h2><p class="subtitle">Reference and collection navigations, initialization and nullability.</p>
+<ul><li><strong>Reference navigation:</strong> points to one related entity, such as <code>Employee.Department</code> or <code>Employee.PayrollAccount</code>.</li><li><strong>Collection navigation:</strong> represents multiple related entities, such as <code>Department.Employees</code>, often typed as <code>List&lt;Employee&gt;</code> or <code>ICollection&lt;Employee&gt;</code>.</li><li><strong>Inverse navigations:</strong> <code>Employee.Department</code> and <code>Department.Employees</code> represent opposite sides of the relationship.</li><li><strong>Collection initialization:</strong> initializing with <code>new List&lt;Employee&gt;()</code> prevents a newly created entity's collection from being null.</li><li><strong>Null-forgiving operator:</strong> <code>null!</code> suppresses a nullable-reference warning; it does not create an object or guarantee that EF has loaded a navigation.</li><li><strong>Nullable reference types:</strong> use nullable types when absence is valid, and configure required/optional relationships consistently.</li><li><strong>Loading:</strong> navigation properties do not automatically load related data just because they are declared; use Include/eager loading or other configured loading approaches.</li></ul>
+<pre><code>// Conceptual navigation properties
+public Department? Department { get; set; }
+public ICollection&lt;Employee&gt; Employees { get; set; }
+    = new List&lt;Employee&gt;();</code></pre>
+<ul class="checklist"><li><label><input type="checkbox">I can distinguish reference and collection navigations and explain nullability.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p15">
+<h2>15. Relationship Discovery & Delete Behaviors</h2><p class="subtitle">Conventions, metadata, foreign keys and delete rules.</p>
+<ul><li>EF Core discovers relationships from navigation properties, primary keys, FK properties with conventional names (such as <code>DepartmentId</code>), and explicit configuration.</li><li>When conventions cannot infer the intended relationship, configure it with Fluent API or suitable attributes.</li><li><strong>Cascade:</strong> deleting a principal can delete dependents, depending on relationship and database behavior.</li><li><strong>Restrict:</strong> prevents principal deletion when dependent rows reference it, where enforced by the provider/database.</li><li><strong>SetNull:</strong> sets the FK to null; the FK must be nullable and database/provider configuration must support it.</li><li><strong>NoAction:</strong> does not configure cascading action; exact constraint behavior depends on provider/database.</li><li>Delete behavior must reflect business rules and referential integrity, not just convenience. Payroll/audit records may need retention.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I understand relationship discovery and Cascade, Restrict, SetNull and NoAction.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p16">
+<h2>16. One-to-Many Relationship</h2><p class="subtitle">Department → Employees, FK configuration and migrations.</p>
+<ul><li>One Department can have many Employees; each Employee typically belongs to one Department.</li><li>FK property: <code>Employee.DepartmentId</code>. Navigations: <code>Employee.Department</code> and <code>Department.Employees</code>.</li><li>Conventions often discover the relationship from the navigation properties, principal key <code>Department.Id</code> and FK name <code>DepartmentId</code>.</li><li>Explicit Fluent API:</li></ul>
+<pre><code>modelBuilder.Entity&lt;Employee&gt;()
+    .HasOne(e =&gt; e.Department)
+    .WithMany(d =&gt; d.Employees)
+    .HasForeignKey(e =&gt; e.DepartmentId);</code></pre>
+<ul><li><code>HasOne()</code> specifies Employee's reference navigation; <code>WithMany()</code> specifies Department's collection; <code>HasForeignKey()</code> identifies the FK on the dependent.</li><li>After model changes, create and inspect a migration, then apply it. Invalid existing FK values can cause FK constraint creation to fail.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can explain the Employee–Department one-to-many relationship and read its Fluent API.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p17">
+<h2>17. One-to-One Relationship</h2><p class="subtitle">Employee ↔ PayrollAccount, FK uniqueness, shadow FKs and delete behavior.</p>
+<ul><li>One Employee has one PayrollAccount in the example; each PayrollAccount belongs to one Employee.</li><li>A common design has <code>PayrollAccount.EmployeeId</code> as FK to <code>Employee.Id</code>, with uniqueness enforcing at most one account per employee. An alternative is a shared primary key.</li><li>Navigation properties are reference properties: <code>Employee.PayrollAccount</code> and <code>PayrollAccount.Employee</code>.</li><li>Explicit configuration:</li></ul>
+<pre><code>modelBuilder.Entity&lt;Employee&gt;()
+    .HasOne(e =&gt; e.PayrollAccount)
+    .WithOne(p =&gt; p.Employee)
+    .HasForeignKey&lt;PayrollAccount&gt;(p =&gt; p.EmployeeId);</code></pre>
+<ul><li><code>WithOne()</code> configures the inverse reference; the generic type in <code>HasForeignKey&lt;PayrollAccount&gt;</code> identifies the dependent type.</li><li><strong>Unique constraint/index:</strong> prevents multiple dependent records referencing the same employee. The FK also ensures the employee exists.</li><li><strong>Shadow FK:</strong> EF Core model property not explicitly declared in the CLR entity. Can be useful but an explicit FK property is easier to access in application code.</li><li><strong>Delete behavior:</strong> Cascade, Restrict/NoAction or SetNull should follow business and retention rules. SetNull requires a nullable FK.</li><li>Inspect migration for FK, uniqueness and delete behavior; duplicate or invalid existing values can prevent constraints from being applied.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can explain the one-to-one FK, uniqueness, shadow FK and delete behavior.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p18">
+<h2>18. Fluent API</h2><p class="subtitle">ModelBuilder, OnModelCreating, chaining, property configuration and relationships.</p>
+<ul><li><code>ModelBuilder</code> configures model metadata; override <code>OnModelCreating(ModelBuilder modelBuilder)</code> in the DbContext.</li><li><code>Entity&lt;T&gt;()</code> selects an entity; <code>Property()</code> selects a property.</li><li><code>HasMaxLength()</code> sets a maximum length; <code>IsRequired()</code> configures requiredness; <code>HasColumnName()</code> maps the database column name; <code>HasColumnType()</code> specifies database type; <code>HasPrecision(precision, scale)</code> configures suitable numeric precision and scale.</li><li><code>ToTable()</code> configures table mapping; <code>HasKey()</code> configures keys; <code>HasIndex()</code> configures indexes.</li><li>Method chaining makes rules readable and centralizes database mapping.</li><li>Relationships use methods such as <code>HasOne</code>, <code>WithMany</code>, <code>WithOne</code>, <code>HasForeignKey</code> and <code>OnDelete</code>.</li><li>Model configuration can lead to migration changes; inspect generated migration and remember that not every model behavior change changes the database schema.</li></ul>
+<pre><code>modelBuilder.Entity&lt;Employee&gt;()
+    .Property(e =&gt; e.Email)
+    .HasMaxLength(150)
+    .IsRequired();</code></pre>
+<ul class="checklist"><li><label><input type="checkbox">I can read property configuration, column mapping and relationship Fluent API.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p19">
+<h2>19. CRUD with EF Core</h2><p class="subtitle">Create, Read, Update, Delete and asynchronous methods.</p>
+<table><tr><th>Action</th><th>Common APIs</th><th>Key behavior</th></tr><tr><td>Create</td><td><code>Add()</code>, <code>AddAsync()</code></td><td>Marks entity Added; save to insert.</td></tr><tr><td>Read list</td><td><code>ToListAsync()</code></td><td>Executes query and materializes list.</td></tr><tr><td>Read first match</td><td><code>FirstOrDefaultAsync()</code></td><td>Returns first match or default/null.</td></tr><tr><td>Read by PK</td><td><code>FindAsync()</code></td><td>Checks tracked entity first, then queries if needed.</td></tr><tr><td>Update</td><td>Modify tracked entity; sometimes <code>Update()</code></td><td>Tracked changes detected; Update can mark more properties than intended.</td></tr><tr><td>Delete</td><td><code>Remove()</code></td><td>Marks entity Deleted.</td></tr><tr><td>Persist</td><td><code>SaveChangesAsync()</code></td><td>Executes pending database changes.</td></tr></table>
+<ul><li><strong>Deferred execution:</strong> LINQ query construction generally does not execute SQL until enumerated or a terminal operation runs.</li><li><strong>Async:</strong> use <code>await</code> with asynchronous database APIs to avoid blocking threads while waiting for I/O; async does not guarantee one query is faster.</li><li><strong>Safe updates:</strong> retrieve an existing entity and change allowed fields where possible; avoid overwriting fields with a partially populated detached entity.</li><li><strong>Read-only:</strong> use <code>AsNoTracking()</code> when change tracking is unnecessary.</li><li><strong>Delete relationships:</strong> consider cascade rules and dependent records.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can choose CRUD APIs and explain when SaveChangesAsync sends SQL.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p20">
+<h2>20. Repository Pattern</h2><p class="subtitle">Data-access abstraction, interfaces, entity-specific repositories and request flow.</p>
+<ul><li>Repository Pattern places data-access logic behind a repository API rather than embedding queries in controllers.</li><li><strong>Interface</strong> such as <code>IEmployeeRepository</code> defines available operations; <strong>implementation</strong> such as <code>EmployeeRepository</code> uses DbContext/DbSet and contains query logic.</li><li>Entity-specific repositories may exist for Employee and Department and add entity-specific queries.</li><li>Typical flow: Controller → Repository → DbContext → EF provider → PostgreSQL → result back to controller.</li><li>Benefits: separation of concerns, reuse, test substitution and a clearer boundary.</li><li>Trade-off: EF Core's DbContext/DbSet already provide repository-like behavior; a custom repository is optional and can add unnecessary abstraction if the application is simple.</li><li>Register repository interfaces and implementations with DI; repositories using scoped DbContext are commonly scoped too.</li><li>Repository handles data access, not HTTP concerns such as choosing status codes.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can explain repository interface vs implementation and the data flow.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p21">
+<h2>21. Unit of Work Pattern</h2><p class="subtitle">Coordinating changes and committing them together.</p>
+<ul><li>Unit of Work coordinates pending changes across repositories for a business operation.</li><li>Example: add an Employee and PayrollAccount, then persist the related changes together.</li><li><strong>Entity state management</strong> marks Added/Modified/Deleted; <strong>persistence</strong> sends changes to the database; <strong>coordination</strong> ensures the operation has a deliberate commit boundary.</li><li>EF Core's DbContext already provides Unit of Work-like behavior: it tracks changes and saves them with <code>SaveChangesAsync()</code>.</li><li>A separate Unit of Work can expose repositories and one commit method, but it is an architectural choice rather than a requirement.</li><li>Repositories participating in one unit should generally share the same DbContext instance; otherwise their tracked changes cannot be committed by the same context save.</li><li>A single relational SaveChanges call normally uses a transaction when supported. Multiple SaveChanges calls are not automatically one shared transaction; use an explicit transaction if the entire multi-save workflow must be atomic.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can distinguish Repository and Unit of Work and explain transaction boundaries.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p22">
+<h2>22. Generic Repository Pattern</h2><p class="subtitle">IGenericRepository&lt;T&gt;, GenericRepository&lt;T&gt;, constraints and entity-specific extensions.</p>
+<ul><li>Generic Repository reuses common CRUD operations instead of repeating the same code for Employee, Department and other entities.</li><li><code>IGenericRepository&lt;T&gt;</code> defines operations; <code>GenericRepository&lt;T&gt;</code> implements them.</li><li><code>T</code> is a type parameter: <code>IGenericRepository&lt;Employee&gt;</code> operates on employees; <code>IGenericRepository&lt;Department&gt;</code> operates on departments.</li><li><code>where T : class</code> restricts T to reference types; the supplied type still needs to be part of EF Core's model to work as an entity.</li><li><code>DbSet&lt;T&gt;</code> or <code>context.Set&lt;T&gt;()</code> accesses the EF entity set for T.</li><li>Entity-specific repositories can extend or compose the generic repository for custom queries, such as employees in a department.</li><li>Don't force specialized query behavior into generic CRUD methods when an entity-specific method is clearer.</li><li>With Unit of Work, repositories generally share a context and stage changes while the Unit of Work controls persistence.</li></ul>
+<pre><code>public class GenericRepository&lt;T&gt; where T : class
+{
+    // Reusable operations use DbContext / DbSet&lt;T&gt;.
+}</code></pre>
+<ul class="checklist"><li><label><input type="checkbox">I understand generic type T, the class constraint and context.Set&lt;T&gt;().</label></li></ul>
+</section>
+
+<section class="section searchable" id="p23">
+<h2>23. DTOs with EF Core APIs</h2><p class="subtitle">Request/response DTOs, mapping, validation and overposting.</p>
+<ul><li><strong>DTO:</strong> Data Transfer Object; defines data transferred across application boundaries, especially API requests/responses.</li><li><strong>Entity:</strong> represents the EF Core model and is mapped to database structures. DTOs normally are not mapped to database tables.</li><li><strong>Create DTO:</strong> input fields permitted for creation; typically excludes server-generated Id and internal fields.</li><li><strong>Update DTO:</strong> fields the client is allowed to modify.</li><li><strong>Response DTO:</strong> output fields the API chooses to expose, potentially including derived data such as DepartmentName.</li><li><strong>Mapping:</strong> request DTO → entity for persistence; entity → response DTO for output. Mapping can be manual or use a library.</li><li><strong>Benefits:</strong> controls exposed fields, reduces circular-reference serialization problems, allows API shape to evolve independently and supports request-specific validation.</li><li><strong>Validation:</strong> attributes can include <code>[Required]</code>, <code>[MaxLength]</code>, <code>[EmailAddress]</code> and <code>[Range]</code>. With <code>[ApiController]</code>, invalid model state commonly produces automatic 400 responses.</li><li><strong>Overposting:</strong> do not blindly copy all request fields onto an entity. Explicitly control properties clients may change; authorization and server-side validation remain necessary.</li><li>GET usually returns response DTOs; POST accepts create DTO; PUT accepts update DTO; DELETE often uses an ID and may not need a DTO.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can explain request/response DTOs, mapping, validation and overposting.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p24">
+<h2>24. Loading Related Data</h2><p class="subtitle">Eager loading, Include, ThenInclude, nested paths and performance.</p>
+<ul><li><strong>Eager loading:</strong> request related entities as part of the query using <code>Include()</code> and <code>ThenInclude()</code>.</li><li><code>Include(e =&gt; e.Department)</code> loads Employee's Department navigation as part of the query.</li><li><code>ThenInclude(d =&gt; d.Employees)</code> continues a path from an included Department to its Employees collection.</li><li>Use multiple Include calls for independent paths, such as Employee → Department and Employee → PayrollAccount.</li><li>EF Core often generates JOINs for eager loading, but exact SQL and whether one or multiple queries run depend on query shape/provider/settings.</li><li>Without loading, navigation properties may not be populated; lazy loading only works if configured and supported. A declared navigation does not itself load data.</li><li>DTO flow: query with needed relationships → map only needed fields → return DTO instead of the entire entity graph.</li><li>Performance: load only needed data; multiple collection includes can expand result sets; consider projections with Select and, where appropriate, <code>AsSplitQuery()</code>. Inspect generated SQL for complex queries.</li></ul>
+<pre><code>var employees = await context.Employees
+    .Include(e =&gt; e.Department)
+    .Include(e =&gt; e.PayrollAccount)
+    .ToListAsync();</code></pre>
+<ul class="checklist"><li><label><input type="checkbox">I can explain Include, ThenInclude, independent paths and loading trade-offs.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p25">
+<h2>25. InverseProperty Attribute</h2><p class="subtitle">Resolving ambiguity when two entity types have multiple relationships.</p>
+<ul><li><code>[InverseProperty]</code> is from <code>System.ComponentModel.DataAnnotations.Schema</code>.</li><li>It identifies which navigation property on the other entity is the inverse of the current navigation, helping EF Core pair properties correctly.</li><li>It is useful when two entity types have multiple relationships or several navigation properties of the same type make conventions ambiguous.</li><li>Its value is the inverse navigation property's name, not a database table or FK column name.</li><li>For simple unambiguous relationships, it is generally unnecessary.</li><li>Fluent API can configure the same complex relationships centrally in <code>OnModelCreating()</code>; choose a consistent approach.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I understand when and why InverseProperty is used.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p26">
+<h2>26. Indexing in EF Core</h2><p class="subtitle">Primary-key, unique, non-unique and composite indexes; performance trade-offs.</p>
+<ul><li><strong>Index:</strong> database structure that can help locate rows efficiently; it does not replace the table or guarantee every query will be faster.</li><li><strong>Primary-key index:</strong> supports unique identification; PK constraints are backed by suitable index structures in PostgreSQL.</li><li><strong>Unique index:</strong> prevents duplicate indexed key combinations, e.g. unique Employee.Email if the business rule requires it.</li><li><strong>Non-unique index:</strong> allows repeated values and can help filtering or joins, e.g. DepartmentId.</li><li><strong>Composite index:</strong> indexes multiple columns in a defined order, e.g. (DepartmentId, Name). Column order affects which query patterns can use it effectively.</li><li>Indexes can help WHERE filters, JOINs and ORDER BY, depending on query plans, statistics and data distribution.</li><li>Foreign-key columns are not necessarily indexed automatically in every provider/model configuration; verify the model and migration.</li><li>Configure using <code>HasIndex()</code> and <code>IsUnique()</code>; inspect migration and apply it. Existing duplicate values can block a unique index.</li><li><strong>Trade-offs:</strong> indexes use storage and must be maintained during inserts, updates and deletes. Too many indexes increase write overhead.</li><li>Create indexes based on query patterns, business constraints and query-plan evidence, not simply every column.</li></ul>
+<pre><code>modelBuilder.Entity&lt;Employee&gt;()
+    .HasIndex(e =&gt; e.Email)
+    .IsUnique();
+
+modelBuilder.Entity&lt;Employee&gt;()
+    .HasIndex(e =&gt; new { e.DepartmentId, e.Name });</code></pre>
+<ul class="checklist"><li><label><input type="checkbox">I can compare index types, configure them and explain performance costs.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p27">
+<h2>27. Enum Mapping</h2><p class="subtitle">C# enum, database string conversion, JSON serialization and Swagger.</p>
+<ul><li>An enum defines a fixed set of named constants, e.g. <code>EmployeeStatus.Active</code>, <code>Inactive</code>, <code>OnLeave</code>.</li><li>EF Core normally stores an enum using its underlying numeric value unless configured otherwise.</li><li><code>.HasConversion&lt;string&gt;()</code> configures EF Core to store/read enum names as strings in the database.</li><li>String storage is readable but uses more space; renaming enum members can require data migration, and invalid stored strings can fail conversion.</li><li><strong>Database conversion vs JSON conversion:</strong> <code>HasConversion&lt;string&gt;()</code> controls database representation; <code>JsonStringEnumConverter</code> controls System.Text.Json serialization. They are separate.</li><li>Configure JSON serialization if API output should show <code>"Active"</code> instead of <code>0</code>.</li><li>OpenAPI/Swagger schema should reflect string enum values when runtime serialization is configured that way; verify both schema and actual response.</li><li>Changing an existing integer column to string may require a data-conversion migration; don't assume a simple model configuration change safely converts existing values.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can distinguish database enum conversion from JSON enum serialization.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p28">
+<h2>28. Serilog</h2><p class="subtitle">Structured logging, levels, ASP.NET Core integration, sinks and management.</p>
+<ul><li><strong>Logging:</strong> records events for startup, requests, successful operations, warnings, failures and exceptions.</li><li><strong>Serilog:</strong> .NET logging library for structured events; it integrates with Microsoft's <code>ILogger&lt;T&gt;</code> abstraction when configured as a provider.</li><li><strong>Levels:</strong> Verbose, Debug, Information, Warning, Error and Fatal. Microsoft levels map broadly: Verbose ≈ Trace; Fatal ≈ Critical.</li><li><strong>Structured logging:</strong> use named placeholders, e.g. <code>logger.LogInformation("Employee {EmployeeId} retrieved", employeeId)</code>, so EmployeeId is stored as a property rather than only embedded in text.</li><li><strong>Sinks:</strong> destinations such as console, file, database or centralized logging service.</li><li><strong>Integration:</strong> install compatible packages, configure Serilog as provider and choose levels/destinations; inject ILogger into controllers/repositories/services.</li><li><strong>Log management:</strong> filter minimum levels, set retention, rotate files, centralize logs where useful and monitor recurring errors.</li><li><strong>Security:</strong> never log passwords, tokens, connection strings or unnecessary sensitive employee data. Avoid duplicate exception logs without added context.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I understand levels, structured properties, sinks, integration and safe log management.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p29">
+<h2>29. Database First & Scaffolding</h2><p class="subtitle">Reverse engineering PostgreSQL into entities and DbContext.</p>
+<ul><li><strong>Database First:</strong> start from an existing schema and generate C# entity classes and DbContext.</li><li><strong>Scaffolding/reverse engineering:</strong> EF Core reads database metadata and generates entity classes, context and mapping configuration.</li><li><strong>Table → class; column → property; database type → C# type.** Primary keys, foreign keys, constraints, nullability and relationships inform generated mappings.</li><li>Generated context typically contains DbSet properties and <code>OnModelCreating()</code> mappings.</li><li>Packages/tools: EF Core runtime, design package/tool, Npgsql provider and compatible versions. <code>dotnet ef</code> CLI is used from a terminal.</li><li>General command shape: <code>dotnet ef dbcontext scaffold "&lt;connection-string&gt;" Npgsql.EntityFrameworkCore.PostgreSQL</code>.</li><li>Useful options: <code>--context</code>, <code>--output-dir</code>, <code>--context-dir</code>, <code>--table</code>, <code>--schema</code>, <code>--use-database-names</code>, <code>--no-onconfiguring</code>.</li><li><strong>OnConfiguring:</strong> scaffold may include provider/connection configuration. In ASP.NET Core, prefer configuration and DI via AddDbContext; <code>--no-onconfiguring</code> avoids generating that method configuration. Context must still be configured by the app.</li><li>Protect credentials; avoid placing production connection strings in source or shell history.</li><li>Database First vs Code First: Database First scaffolds from schema; Code First defines model and uses migrations to evolve schema.</li></ul>
+<ul class="checklist"><li><label><input type="checkbox">I can explain scaffolding, generated files, packages, command options and connection configuration.</label></li></ul>
+</section>
+
+<section class="section searchable" id="p30">
+<h2>30. Schema Changes & Re-scaffolding</h2><p class="subtitle">Adding columns, --force, generated vs custom code and partial classes.</p>
+<ul><li>In Database First, update the database schema first when the database is the source of truth, then re-scaffold the model to reflect the schema.</li><li>Example: add <code>PhoneNumber</code> to PostgreSQL Student table; re-scaffolding can generate a matching Student property and updated mappings.</li><li><code>--force</code> allows scaffolded files to be overwritten. It does not intelligently merge manual edits; existing generated files may be replaced.</li><li>Keep generated entities/context separate from custom services, controllers, DTOs, business rules and mapping logic.</li><li><strong>Partial classes:</strong> if the generated entity is declared <code>partial</code>, add custom methods/properties in a separate partial class file that won't be overwritten by re-scaffolding.</li><li>A custom property in a partial class does not automatically map to a database column; persistent mapping must be configured appropriately.</li><li>Re-scaffolding reads the database; it does not create the database column. Only selected tables/schemas are regenerated when those options are used.</li><li><strong>Safe workflow:</strong> verify schema → commit/save changes → scaffold with correct selection/options → review source-control diff → build/test → verify read/write behavior.</li></ul>
+<div class="callout"><strong>Remember:</strong> <code>--force</code> is an overwrite option, not a merge option. Protect custom work before using it.</div>
+<ul class="checklist"><li><label><input type="checkbox">I understand re-scaffolding, --force, partial classes and the safe workflow.</label></li></ul>
+</section>
+
+<section class="section searchable" id="cheatsheet">
+<h2>Cheat Sheet — Important Concepts & Methods</h2><p class="subtitle">Quick revision before the Week 4 practical implementation.</p>
+<table><tr><th>Concept</th><th>Remember</th></tr>
+<tr><td>PostgreSQL provider</td><td><code>Npgsql.EntityFrameworkCore.PostgreSQL</code>; configure with <code>UseNpgsql()</code></td></tr>
+<tr><td>Register DbContext</td><td><code>AddDbContext&lt;TContext&gt;()</code>; commonly scoped per request</td></tr>
+<tr><td>Model configuration</td><td><code>OnModelCreating(ModelBuilder)</code>, <code>Entity&lt;T&gt;()</code></td></tr>
+<tr><td>Property rules</td><td><code>Property()</code>, <code>HasMaxLength()</code>, <code>IsRequired()</code>, <code>HasColumnName()</code>, <code>HasColumnType()</code>, <code>HasPrecision()</code></td></tr>
+<tr><td>One-to-many</td><td><code>HasOne().WithMany().HasForeignKey()</code></td></tr>
+<tr><td>One-to-one</td><td><code>HasOne().WithOne().HasForeignKey&lt;Dependent&gt;()</code> plus unique FK semantics</td></tr>
+<tr><td>Query</td><td><code>Where()</code>, <code>Select()</code>, <code>ToListAsync()</code>, <code>FirstOrDefaultAsync()</code>, <code>FindAsync()</code></td></tr>
+<tr><td>Related data</td><td><code>Include()</code>, <code>ThenInclude()</code>, consider projection/split queries</td></tr>
+<tr><td>Change state</td><td><code>Add()</code> → Added; changed tracked entity → Modified; <code>Remove()</code> → Deleted</td></tr>
+<tr><td>Persist</td><td><code>SaveChangesAsync()</code></td></tr>
+<tr><td>Read-only</td><td><code>AsNoTracking()</code></td></tr>
+<tr><td>Index</td><td><code>HasIndex()</code>, <code>IsUnique()</code></td></tr>
+<tr><td>Enum in DB</td><td><code>HasConversion&lt;string&gt;()</code></td></tr>
+<tr><td>Enum in JSON</td><td><code>JsonStringEnumConverter</code></td></tr>
+<tr><td>Logging</td><td><code>ILogger&lt;T&gt;</code>, Serilog, sinks and structured templates</td></tr>
+<tr><td>Migration commands</td><td><code>dotnet ef migrations add Name</code>; <code>dotnet ef database update</code>; <code>dotnet ef migrations list</code>; <code>dotnet ef migrations script</code></td></tr>
+<tr><td>Database First</td><td><code>dotnet ef dbcontext scaffold</code>; <code>--force</code> overwrites existing generated files</td></tr>
+<tr><td>DTOs</td><td>Request DTO → entity; entity → response DTO; explicitly map allowed fields</td></tr>
+<tr><td>Repository</td><td>Data-access abstraction; optional layer over DbContext/DbSet</td></tr>
+<tr><td>Unit of Work</td><td>Coordinates changes; DbContext already has Unit-of-Work-like behavior</td></tr></table>
+</section>
+
+<section class="section searchable" id="finalquiz">
+<h2>Final Revision Quiz</h2><p class="subtitle">Try answering all questions before revealing the explanations.</p>
+<div class="quiz" id="finalQuiz">
+<div class="q"><label>1. What does DbContext do?</label><select data-answer="tracks"><option value="">Choose…</option><option value="provider">Only stores connection strings</option><option value="tracks">Coordinates querying, tracking and saving</option><option value="ui">Renders Swagger UI</option></select><div class="answer">Answer: It coordinates queries, tracked entities and persistence.</div></div>
+<div class="q"><label>2. Which state does Add() normally set?</label><select data-answer="added"><option value="">Choose…</option><option value="modified">Modified</option><option value="added">Added</option><option value="deleted">Deleted</option></select><div class="answer">Answer: Added; the insert is normally executed on SaveChanges.</div></div>
+<div class="q"><label>3. What enforces that a one-to-one dependent is not repeated for the same principal?</label><select data-answer="unique"><option value="">Choose…</option><option value="navigation">Navigation property alone</option><option value="unique">Unique FK constraint/index</option><option value="dto">DTO class name</option></select><div class="answer">Answer: A unique constraint/index on the dependent FK enforces the at-most-one rule.</div></div>
+<div class="q"><label>4. What is the difference between Include and ThenInclude?</label><select data-answer="path"><option value="">Choose…</option><option value="path">Include starts a navigation path; ThenInclude continues it</option><option value="same">They are identical</option><option value="save">Both save changes</option></select><div class="answer">Answer: Include loads a direct navigation; ThenInclude continues from an included navigation.</div></div>
+<div class="q"><label>5. Does HasConversion&lt;string&gt;() configure JSON serialization?</label><select data-answer="separate"><option value="">Choose…</option><option value="yes">Yes, always</option><option value="separate">No, database conversion and JSON serialization are separate</option></select><div class="answer">Answer: No. JsonStringEnumConverter controls System.Text.Json enum serialization.</div></div>
+<div class="q"><label>6. What does --force do during scaffolding?</label><select data-answer="overwrite"><option value="">Choose…</option><option value="merge">Merges every custom edit safely</option><option value="overwrite">Allows existing generated files to be overwritten</option><option value="database">Adds columns to PostgreSQL</option></select><div class="answer">Answer: It overwrites generated files; it does not alter the database or merge custom edits.</div></div>
+<div class="q"><label>7. What is the purpose of a DTO?</label><select data-answer="transfer"><option value="">Choose…</option><option value="transfer">Control and transfer data at application/API boundaries</option><option value="track">Track entity state</option><option value="index">Create database indexes</option></select><div class="answer">Answer: DTOs define the request/response data shape and help control exposed or writable fields.</div></div>
+<div class="q"><label>8. What is one trade-off of database indexes?</label><select data-answer="write"><option value="">Choose…</option><option value="free">They are free for storage and writes</option><option value="write">They use storage and add write-maintenance overhead</option><option value="delete">They remove the need for primary keys</option></select><div class="answer">Answer: Indexes can speed suitable reads but consume storage and need maintenance on writes.</div></div>
+<div class="q"><label>9. What is the purpose of Repository Pattern?</label><select data-answer="data"><option value="">Choose…</option><option value="data">Separate data access behind an abstraction</option><option value="schema">Automatically create every migration</option><option value="logging">Replace Serilog</option></select><div class="answer">Answer: It separates data-access operations from controllers/application logic; it is optional with EF Core.</div></div>
+<div class="q"><label>10. What does a migration snapshot represent?</label><select data-answer="model"><option value="">Choose…</option><option value="model">The current EF model used for future migration comparisons</option><option value="backup">A complete database backup</option><option value="logs">A Serilog log file</option></select><div class="answer">Answer: The model snapshot helps EF Core compare the current model with later model changes.</div></div>
+<button class="btn reveal">Show answers</button>
+</div>
+<div class="callout"><strong>Ready to implement?</strong> Before moving to the practical Employee Management System, aim to explain each concept without looking, especially DbContext/Change Tracker, migrations, relationships, CRUD, repositories/Unit of Work, DTOs, related-data loading, indexes, enum mapping and logging.</div>
+<ul class="checklist"><li><label><input type="checkbox">I reviewed all 30 theory parts.</label></li><li><label><input type="checkbox">I attempted the quizzes before revealing answers.</label></li><li><label><input type="checkbox">I can explain the architecture and key EF Core methods in my own words.</label></li></ul>
+</section>
+<div class="footer">Week 4 Study Guide · Use this page for revision, not as a substitute for reviewing generated SQL, migrations, provider behavior and project-specific requirements.</div>
+</main>
+</div>
+<script>
+const root=document.documentElement;
+const themeBtn=document.getElementById('themeBtn');
+const savedTheme=localStorage.getItem('week4-theme');
+if(savedTheme) root.setAttribute('data-theme',savedTheme);
+themeBtn.textContent=root.getAttribute('data-theme')==='dark'?'☀ Light':'☾ Theme';
+themeBtn.addEventListener('click',()=>{const next=root.getAttribute('data-theme')==='dark'?'light':'dark';if(next==='light')root.removeAttribute('data-theme');else root.setAttribute('data-theme','dark');localStorage.setItem('week4-theme',next);themeBtn.textContent=next==='dark'?'☀ Light':'☾ Theme';});
+document.querySelectorAll('.reveal').forEach(btn=>btn.addEventListener('click',()=>{const box=btn.closest('.quiz');box.classList.toggle('show-answers');btn.textContent=box.classList.contains('show-answers')?'Hide answers':'Show answers';}));
+document.getElementById('search').addEventListener('input',e=>{const term=e.target.value.trim().toLowerCase();document.querySelectorAll('.section').forEach(s=>{s.classList.toggle('hidden',term && !s.innerText.toLowerCase().includes(term));});});
+const checks=[...document.querySelectorAll('.checklist input[type=checkbox]')];
+const progress=document.getElementById('progress'),progressText=document.getElementById('progressText');
+function updateProgress(){const done=checks.filter(c=>c.checked).length;const pct=checks.length?Math.round(done/checks.length*100):0;progress.value=pct;progressText.textContent=pct+'%';}
+checks.forEach(c=>c.addEventListener('change',updateProgress));
+document.querySelectorAll('.navlink').forEach(a=>a.addEventListener('click',()=>{document.querySelectorAll('.navlink').forEach(n=>n.classList.remove('active'));a.classList.add('active');}));
+</script>
+</body>
+</html>
